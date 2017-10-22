@@ -13,7 +13,7 @@
     </head>
 
     <body>
-        @include('inc.header')
+        @yield('before-content')
 
         @yield('content')
 
