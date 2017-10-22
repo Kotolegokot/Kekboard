@@ -4,11 +4,11 @@
         {{ config('app.name') }}
     </a>
 
-    <button class="navbar-toggler" type="button" data-toggle="cllapse" data-target="navbar-content">
-        <span class="navbar-toggle-icon"></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+        x
     </button>
 
-    <div class="collapse navbar-collapse" id="navbar-content">
+    <div class="collapse navbar-collapse" id="navbarContent">
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link {{ Request::segments() == [] ? 'active' : '' }}">{{ __('Home') }}</a>
 
@@ -16,7 +16,16 @@
                 /b/
             </span>
         </div>
-        <a class="nav-item nav-link {{ Request::segments() == [] ? 'active' : '' }}">{{ __('Settings') }}</a>
-        <a class="nav-item nav-link {{ Request::segments() == [] ? 'active' : '' }}">{{ __('Quit') }}</a>
+        <div class="nav-item dropdown float-right">
+            <span class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" style="cursor: pointer">
+                username
+            </span>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">{{ __('Profile') }}</a>
+                <a class="dropdown-item" href="#">{{ __('Settings') }}</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">{{ __('Quit') }}</a>
+            </div>
+        </div>
     </div>
 </nav>

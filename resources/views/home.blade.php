@@ -5,5 +5,7 @@
 @endsection
 
 @section('content')
-    LEL
+    <div class="container">
+        LEL
+    </div>
 @endsection
