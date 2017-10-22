@@ -6,6 +6,18 @@
 
 @section('content')
     <div class="container">
-        LEL
+        <ul id="sections">
+            @foreach($sections as $section)
+                <li>
+                    <a href="#">
+                        {{ $section->name  }}
+                    </a>
+
+                    <span class="badge">
+                        {{ $section->shorthand }}
+                    </span>
+                </li>
+            @endforeach
+        </ul>
     </div>
 @endsection

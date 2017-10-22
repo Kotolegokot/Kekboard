@@ -12,7 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+    $sections = App\Section::all();
+
+    return view('home', compact('sections'));
 })->name('home');
 
 Route::get('/login', 'LoginController@create')->name('login.form');
