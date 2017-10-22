@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\Theme::class, function (Faker $faker) {
+$factory->define(App\Thread::class, function (Faker $faker) {
     return [
         //
     ];
