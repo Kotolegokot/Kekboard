@@ -13,6 +13,8 @@
     </head>
 
     <body>
+        @include('inc.header')
+
         @yield('content')
 
         <!-- jQuery -->
