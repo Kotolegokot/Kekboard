@@ -12,20 +12,27 @@
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link {{ Request::segments() == [] ? 'active' : '' }}">{{ __('Home') }}</a>
 
-            <span class="navbar-text mx-auto">
+            <span class="navbar-text text-center">
                 /b/
             </span>
         </div>
         <div class="nav-item dropdown float-right">
             <span class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" style="cursor: pointer">
-                username
+                {{ Auth::check() ? Auth::user()->name : '' }}
             </span>
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="#">{{ __('Profile') }}</a>
                 <a class="dropdown-item" href="#">{{ __('Settings') }}</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">{{ __('Quit') }}</a>
+
+                <button form="quit" class="dropdown-item" href="#">{{ __('Quit') }}</button>
             </div>
         </div>
     </div>
 </nav>
+
+<form style="display: none" id="quit" method="post" action="{{ route('quit') }}">
+    {{ method_field('delete') }}
+
+    {{ csrf_field() }}
+</form>

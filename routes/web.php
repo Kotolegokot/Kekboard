@@ -13,8 +13,8 @@
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 
-Route::get('/login', function () {
-    return view('login');
-});
+Route::get('/login', 'LoginController@create')->name('login.form');
+Route::post('/login', 'LoginController@store')->name('login');
+Route::delete('/destroy', 'LoginController@destroy')->name('quit');

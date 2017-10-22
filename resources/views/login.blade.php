@@ -6,7 +6,7 @@
             {{ config('app.name') }}
         </h1>
 
-        <form method="post" action="/login">
+        <form method="post" action="{{ route('login') }}">
             @if($errors->has('general'))
                 <div class="alert alert-danger">
                     {{ $errors->first('general') }}
