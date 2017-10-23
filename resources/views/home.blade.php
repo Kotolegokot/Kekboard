@@ -9,7 +9,7 @@
         <ul id="sections">
             @foreach($sections as $section)
                 <li>
-                    <a href="#">
+                    <a href="{{ route('section', ['shorthand' => $section->shorthand]) }}">
                         {{ $section->name }}
                     </a>
 

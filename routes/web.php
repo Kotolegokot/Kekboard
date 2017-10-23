@@ -11,12 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    $sections = App\Section::all();
-
-    return view('home', compact('sections'));
-})->name('home');
+Route::get('/', 'SectionController@index')->name('home');
 
 Route::get('/login', 'LoginController@create')->name('login.form');
 Route::post('/login', 'LoginController@store')->name('login');
 Route::delete('/destroy', 'LoginController@destroy')->name('quit');
+
+Route::get('/{shorthand}', 'SectionController@show')->name('section');

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'title' => 'Login',
     'login-placeholder' => 'Login',
     'login-description' => 'Keep your login in secret',
     'password-placeholder' => 'Password',

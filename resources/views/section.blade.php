@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title')
-    {{ config('app.name') : __('Sections') }}
+    {{ config('app.name') . ' | ' . __('section.title', ['shorthand' => $section->shorthand]) }}
 @endsection
 
 @section('content')

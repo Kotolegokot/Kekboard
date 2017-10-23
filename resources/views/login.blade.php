@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('title')
+    {{ config('app.name') . ' | ' . __('login.title') }}
+@endsection
+
 @section('content')
     <div class="container">
         <h1 class="text-center">
