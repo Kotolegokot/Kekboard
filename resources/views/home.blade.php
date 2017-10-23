@@ -10,7 +10,7 @@
             @foreach($sections as $section)
                 <li>
                     <a href="#">
-                        {{ $section->name  }}
+                        {{ $section->name }}
                     </a>
 
                     <span class="badge">

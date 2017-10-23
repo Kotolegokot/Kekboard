@@ -9191,3 +9191,15 @@ a.text-dark:hover {
   visibility: hidden !important;
 }
 
+#header {
+  background-color: #AB006F !important;
+}
+
+.pointed {
+  cursor: pointer;
+}
+
+.vanished {
+  display: none;
+}
+

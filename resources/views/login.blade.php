@@ -16,17 +16,17 @@
             {{ csrf_field() }}
 
             <div class="form-group">
-                <input type="text" class="form-control" id="login" name="login" placeholder="{{ __('Login') }}"
+                <input type="text" class="form-control" id="login" name="login" placeholder="@lang('login.login-placeholder')"
                     value="{{ old('login') }}" required autofocus />
-                <small class="form-text text-muted">{{ __('Keep your login in secret') }}</small>
+                <small class="form-text text-muted">@lang('login.login-description')</small>
             </div>
 
             <div class="form-group">
-                <input type="password" class="form-control" id="password" name="password" placeholder="{{ __('Password') }}" required />
-                <small class="form-text text-muted">{{ __('Don\'t share your password with anyone either') }}</small>
+                <input type="password" class="form-control" id="password" name="password" placeholder="@lang('login.password-placeholder')" required />
+                <small class="form-text text-muted">@lang('login.password-description')</small>
             </div>
 
-            <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
+            <button type="submit" class="btn btn-primary">@lang('login.submit')</button>
         </form>
     </div>
 @endsection

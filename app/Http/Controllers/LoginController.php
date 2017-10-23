@@ -23,13 +23,13 @@ class LoginController extends Controller
             return redirect()->intended(route('home'));
         }
 
-        return back()->withInput()->withErrors(['general' => __('Wrong credentials')]);
+        return back()->withInput()->withErrors(['general' => __('auth.failed')]);
     }
 
     public function destroy()
     {
         Auth::logout();
 
-        return redirect('login');
+        return redirect()->route('login');
     }
 }
