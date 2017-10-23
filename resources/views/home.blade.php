@@ -6,18 +6,12 @@
 
 @section('content')
     <div class="container">
-        <ul id="sections">
+        <div class="list-group" id="sections">
             @foreach($sections as $section)
-                <li>
-                    <a href="{{ route('section', ['shorthand' => $section->shorthand]) }}">
-                        {{ $section->name }}
-                    </a>
-
-                    <span class="badge">
-                        {{ $section->shorthand }}
-                    </span>
-                </li>
+                <a class="list-group-item list-group-item-action" href="{{ route('section', ['shorthand' => $section->shorthand]) }}">
+                    {{ $section->name }} <span class="badge badge-info">{{ $section->shorthand }}</span>
+                </a>
             @endforeach
-        </ul>
+        </div>
     </div>
 @endsection

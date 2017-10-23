@@ -6,9 +6,11 @@
 
 @section('content')
     <div class="container">
-        <h1 class="text-center">
-            {{ config('app.name') }}
-        </h1>
+        <p>
+            <h1 class="text-center">
+                {{ config('app.name') }}
+            </h1>
+        </p>
 
         <form method="post" action="{{ route('login') }}">
             @if($errors->has('general'))
