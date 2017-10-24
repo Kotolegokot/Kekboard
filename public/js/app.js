@@ -974,12 +974,14 @@ __webpack_require__(11);
 
 window.Vue = __webpack_require__(35);
 
-(function () {
+document;
+
+$(function () {
     var vw = new Vue({
         el: "#kekboard",
         data: {
             appName: 'Kekboard',
-            currentPage: ''
+            page: ''
         },
         computed: {
             title: function title() {
@@ -991,7 +993,13 @@ window.Vue = __webpack_require__(35);
             }
         }
     });
-})();
+
+    vw.$watch('page', function () {
+        $(document).attr('title', this.title);
+    }, {
+        immediate: true
+    });
+});
 
 /***/ }),
 /* 11 */

@@ -9191,16 +9191,7 @@ a.text-dark:hover {
   visibility: hidden !important;
 }
 
-#header {
-  background-color: #AB006F !important;
-  margin-bottom: 16px;
-}
-
-.pointed {
-  cursor: pointer;
-}
-
-.vanished {
-  display: none;
+div#content {
+  margin-top: 16px;
 }
 

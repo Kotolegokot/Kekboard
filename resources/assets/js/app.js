@@ -2,12 +2,14 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-(function () {
-    const vw = new Vue({
+document
+
+$(function () {
+    var vw = new Vue({
         el: "#kekboard",
         data: {
             appName: 'Kekboard',
-            currentPage: '',
+            page: ''
         },
         computed: {
             title: function () {
@@ -19,4 +21,10 @@ window.Vue = require('vue');
             },
         },
     });
-})();
+
+    vw.$watch('page', function () {
+        $(document).attr('title', this.title);
+    }, {
+        immediate: true,
+    });
+});
