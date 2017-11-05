@@ -13,10 +13,10 @@
     </head>
 
     <body>
-        <div id="kekboard">
-            @include('inc.header')
+        <div id="app">
+            <app-header></app-header>
 
-            <div class="container" id="content">
+            <div id="content" class="container">
             </div>
         </div>
 

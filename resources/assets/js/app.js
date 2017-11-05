@@ -1,33 +1,33 @@
 require('./bootstrap');
 
-window.Vue = require('vue');
-
+import Vue from 'vue'
+import Vuex from 'vuex'
 import Header from './components/Header.vue'
 
-$(function () {
-    var vw = new Vue({
-        el: "#kekboard",
-        data: {
-            appName: 'Kekboard',
-            page: '',
-        },
-        components: {
-            'app-header': Header,
-        },
-        computed: {
-            title: function () {
-                if (this.page.title) {
-                    return this.appName + ' | ' + this.page.title;
-                } else {
-                    return this.appName;
-                }
-            },
-        },
-    });
+Vue.use(Vuex)
 
-    vw.$watch('page', function () {
-        $(document).attr('title', this.title);
-    }, {
-        immediate: true,
-    });
+$(function () {
+  const store = new Vuex.Store({
+    state: {
+      appName: 'Kekboard',
+      page: ''
+    },
+    mutations: {
+      go (state, page) {
+        Vue.set(this.state, 'page', page);
+        $(document).attr('title', this.getters.title);
+      }
+    },
+    getters: {
+      title: state => state.appName + (state.page ? ' | ' + state.page : '')
+    }
+  })
+
+  let vue = new Vue({
+    el: "#app",
+    components: {
+        'app-header': Header,
+    },
+    store
+  });
 });
