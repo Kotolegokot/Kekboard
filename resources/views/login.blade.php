@@ -12,7 +12,7 @@
             </h1>
         </p>
 
-        <form method="post" action="{{ route('login') }}">
+        <form method="post" action="{{ route('login.store') }}">
             @if($errors->has('general'))
                 <div class="alert alert-danger">
                     {{ $errors->first('general') }}

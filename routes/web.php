@@ -11,14 +11,10 @@
 |
 */
 
-Route::get('/', 'SectionController@index')->name('home');
-
-Route::get('/login', 'LoginController@create')->name('login.form');
-Route::post('/login', 'LoginController@store')->name('login');
-Route::delete('/destroy', 'LoginController@destroy')->name('quit');
-
-Route::get('/app', function () {
+Route::get('/', function () {
     return view('app');
-});
+})->name('home');
 
-Route::get('/{shorthand}', 'SectionController@show')->name('section');
+Route::get('/login', 'LoginController@create')->name('login.create');
+Route::post('/login', 'LoginController@store')->name('login.store');
+Route::get('/logout', 'LoginController@destroy')->name('logout');

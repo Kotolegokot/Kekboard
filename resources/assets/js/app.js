@@ -2,19 +2,22 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-document
+import Header from './components/Header.vue'
 
 $(function () {
     var vw = new Vue({
         el: "#kekboard",
         data: {
             appName: 'Kekboard',
-            page: ''
+            page: '',
+        },
+        components: {
+            'app-header': Header,
         },
         computed: {
             title: function () {
-                if (this.currentPage) {
-                    return this.appName + ' | ' + this.currentPage;
+                if (this.page.title) {
+                    return this.appName + ' | ' + this.page.title;
                 } else {
                     return this.appName;
                 }

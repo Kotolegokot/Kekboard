@@ -21,7 +21,7 @@ class BackToLogin
         }
 
         if (Auth::guest() && $request->segment(1) != 'login') {
-            return redirect()->route('login');
+            return redirect()->route('login.create');
         }
 
         return $next($request);
