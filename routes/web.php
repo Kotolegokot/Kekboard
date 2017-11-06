@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Http\Request;
+
 Route::get('/', function () {
     return view('app');
 })->name('home');
@@ -18,3 +20,7 @@ Route::get('/', function () {
 Route::get('/login', 'LoginController@create')->name('login.create');
 Route::post('/login', 'LoginController@store')->name('login.store');
 Route::get('/logout', 'LoginController@destroy')->name('logout');
+
+Route::get('/user', function (Request $request) {
+    return Auth::check() ? $request->user() : abort(406);
+});

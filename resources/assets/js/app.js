@@ -1,10 +1,11 @@
-require('./bootstrap');
-
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueResource from 'vue-resource'
 import Header from './components/Header.vue'
+import bootstrap from './bootstrap'
 
 Vue.use(Vuex)
+Vue.use(VueResource)
 
 $(function () {
   const store = new Vuex.Store({
@@ -29,5 +30,5 @@ $(function () {
         'app-header': Header,
     },
     store
-  });
-});
+  })
+})
