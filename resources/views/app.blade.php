@@ -17,6 +17,7 @@
             <app-header></app-header>
 
             <div id="content" class="container">
+              <component v-bind:is="currentView"></component>
             </div>
         </div>
 

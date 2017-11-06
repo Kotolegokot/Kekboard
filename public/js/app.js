@@ -697,10 +697,10 @@ process.umask = function() { return 0; };
 "use strict";
 /* unused harmony export Store */
 /* unused harmony export install */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapMutations; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return mapState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapMutations; });
 /* unused harmony export mapGetters */
-/* unused harmony export mapActions */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapActions; });
 /* unused harmony export createNamespacedHelpers */
 /**
  * vuex v3.0.1
@@ -1923,8 +1923,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_resource__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Header_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Header_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_Header_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__bootstrap__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__bootstrap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__bootstrap__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Sections_vue__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Sections_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_Sections_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__bootstrap__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__bootstrap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__bootstrap__);
+
 
 
 
@@ -1934,21 +1937,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_resource__["a" /* default */]);
 
+var defaultPage = 'sections';
+
 $(function () {
   var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     state: {
       appName: 'Kekboard',
+      pages: {
+        sections: {
+          name: 'Sections',
+          component: __WEBPACK_IMPORTED_MODULE_4__components_Sections_vue___default.a
+        },
+        settings: {
+          name: 'Settings',
+          component: null
+        }
+      },
       page: ''
     },
     mutations: {
       go: function go(state, page) {
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(this.state, 'page', page);
+        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(this.state, 'page', state.pages[page]);
         $(document).attr('title', this.getters.title);
       }
     },
     getters: {
       title: function title(state) {
-        return state.appName + (state.page ? ' | ' + state.page : '');
+        return state.appName + (state.page ? ' | ' + state.page.name : '');
+      },
+      currentView: function currentView(state) {
+        return state.page.component;
       }
     }
   });
@@ -1958,8 +1976,11 @@ $(function () {
     components: {
       'app-header': __WEBPACK_IMPORTED_MODULE_3__components_Header_vue___default.a
     },
-    store: store
+    store: store,
+    computed: __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].mapGetters(['currentView'])
   });
+
+  vue.$store.commit('go', defaultPage);
 });
 
 /***/ }),
@@ -12979,8 +13000,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['appName'])),
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['go']), {
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['appName'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['go']), {
     goToSettings: function goToSettings() {
       this.$store.commit('go', 'settings');
     }
@@ -46804,6 +46825,128 @@ if (typeof window !== 'undefined' && window.Vue) {
 /***/ (function(module, exports) {
 
 /* (ignored) */
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(16)
+/* script */
+var __vue_script__ = __webpack_require__(52)
+/* template */
+var __vue_template__ = __webpack_require__(51)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Sections.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d948e192", Component.options)
+  } else {
+    hotAPI.reload("data-v-d948e192", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "ul",
+    { staticClass: "list-group", attrs: { id: "sections" } },
+    _vm._l(_vm.sections, function(section) {
+      return _c(
+        "a",
+        {
+          staticClass: "list-group-item list-group-item-action",
+          attrs: { href: "#" }
+        },
+        [_vm._v("\n    " + _vm._s(section) + "\n  ")]
+      )
+    })
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-d948e192", module.exports)
+  }
+}
+
+/***/ }),
+/* 52 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(4);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'sections',
+  data: function data() {
+    return {
+      sections: []
+    };
+  },
+
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['sections'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['updateSections'])),
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$http.get('/sections').then(function (response) {
+      _this.sections = response.body;
+    }, function (response) {
+      window.location.href = '/login';
+    });
+  }
+});
 
 /***/ })
 /******/ ]);

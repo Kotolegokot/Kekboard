@@ -24,3 +24,7 @@ Route::get('/logout', 'LoginController@destroy')->name('logout');
 Route::get('/user', function (Request $request) {
     return Auth::check() ? $request->user() : abort(406);
 });
+
+Route::get('/sections', function (Request $request) {
+    return Auth::check() ? App\Section::all()->pluck('name') : abort(406);
+});
