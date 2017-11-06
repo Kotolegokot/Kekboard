@@ -1953,7 +1953,9 @@ $(function () {
           component: null
         }
       },
-      page: ''
+      page: '',
+      sections: [],
+      username: ''
     },
     mutations: {
       go: function go(state, page) {
@@ -1967,6 +1969,26 @@ $(function () {
       },
       currentView: function currentView(state) {
         return state.page.component;
+      }
+    },
+    actions: {
+      updateSections: function updateSections(_ref) {
+        var state = _ref.state;
+
+        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/sections').then(function (response) {
+          state.sections = response.body;
+        }, function (response) {
+          window.location.href = '/login';
+        });
+      },
+      updateUsername: function updateUsername(_ref2) {
+        var state = _ref2.state;
+
+        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/user').then(function (response) {
+          state.username = response.body.name;
+        }, function (response) {
+          window.location.href = '/login';
+        });
       }
     }
   });
@@ -12995,25 +13017,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'header',
   data: function data() {
-    return {
-      username: ''
-    };
+    return {};
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['appName'])),
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['go']), {
-    goToSettings: function goToSettings() {
-      this.$store.commit('go', 'settings');
-    }
-  }),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['appName', 'username'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['go']), Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['updateUsername'])),
   mounted: function mounted() {
-    var _this = this;
-
-    this.$http.get('/user').then(function (response) {
-      _this.username = response.body.name;
-    }, function (response) {
-      window.location.href = '/login';
-    });
+    this.updateUsername();
   }
 });
 
@@ -13032,9 +13042,19 @@ var render = function() {
       attrs: { id: "header" }
     },
     [
-      _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
-        _vm._v("\n    " + _vm._s(_vm.appName) + "\n  ")
-      ]),
+      _c(
+        "a",
+        {
+          staticClass: "navbar-brand",
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              _vm.go("sections")
+            }
+          }
+        },
+        [_vm._v("\n    " + _vm._s(_vm.appName) + "\n  ")]
+      ),
       _vm._v(" "),
       _c("div", { staticClass: "dropdown ml-auto", attrs: { id: "menu" } }, [
         _c(
@@ -13059,7 +13079,11 @@ var render = function() {
               {
                 staticClass: "dropdown-item",
                 attrs: { href: "#" },
-                on: { click: _vm.goToSettings }
+                on: {
+                  click: function($event) {
+                    _vm.go("settings")
+                  }
+                }
               },
               [_vm._v("Settings")]
             ),
@@ -46930,21 +46954,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'sections',
   data: function data() {
-    return {
-      sections: []
-    };
+    return {};
   },
 
   computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['sections'])),
   methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['updateSections'])),
   mounted: function mounted() {
-    var _this = this;
-
-    this.$http.get('/sections').then(function (response) {
-      _this.sections = response.body;
-    }, function (response) {
-      window.location.href = '/login';
-    });
+    this.updateSections();
   }
 });
 

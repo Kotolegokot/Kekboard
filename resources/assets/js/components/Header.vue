@@ -1,6 +1,6 @@
 <template>
   <nav id="header" class="d-flex navbar sticky-top navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">
+    <a href="#" @click="go('sections')" class="navbar-brand">
       <!-- <img src="/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt=""> -->
       {{ appName }}
     </a>
@@ -10,7 +10,7 @@
         {{ username }}
       </a>
       <div class="dropdown-menu dropdown-menu-right" style="left: initial; right: 0">
-        <a href="#" @click="goToSettings" class="dropdown-item">Settings</a>
+        <a href="#" @click="go('settings')" class="dropdown-item">Settings</a>
         <a href="/logout" class="dropdown-item">Quit</a>
       </div>
     </div>
@@ -18,34 +18,30 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'header',
   data () {
     return {
-      username: ''
     }
   },
   computed: {
     ...mapState([
-      'appName'
+      'appName',
+      'username'
     ])
   },
   methods: {
     ...mapMutations([
       'go'
     ]),
-    goToSettings () {
-      this.$store.commit('go', 'settings')
-    }
+    ...mapActions([
+      'updateUsername'
+    ])
   },
   mounted () {
-    this.$http.get('/user').then(response => {
-      this.username = response.body.name
-    }, response => {
-      window.location.href = '/login'
-    })
+    this.updateUsername()
   }
 }
 </script>

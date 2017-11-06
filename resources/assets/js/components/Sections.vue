@@ -13,7 +13,6 @@ export default {
   name: 'sections',
   data () {
     return {
-      sections: []
     }
   },
   computed: {
@@ -27,11 +26,7 @@ export default {
     ]),
   },
   mounted () {
-    this.$http.get('/sections').then(response => {
-      this.sections = response.body
-    }, response => {
-      window.location.href = '/login'
-    })
+    this.updateSections()
   }
 }
 </script>

@@ -24,7 +24,9 @@ $(function () {
           component: null
         }
       },
-      page: ''
+      page: '',
+      sections: [],
+      username: ''
     },
     mutations: {
       go (state, page) {
@@ -35,6 +37,22 @@ $(function () {
     getters: {
       title: state => state.appName + (state.page ? ' | ' + state.page.name : ''),
       currentView: state => state.page.component
+    },
+    actions: {
+      updateSections ({ state }) {
+        Vue.http.get('/sections').then(response => {
+          state.sections = response.body
+        }, response => {
+          window.location.href = '/login'
+        })
+      },
+      updateUsername ({ state }) {
+        Vue.http.get('/user').then(response => {
+          state.username = response.body.name
+        }, response => {
+          window.location.href = '/login'
+        })
+      }
     }
   })
 
