@@ -1,6 +1,6 @@
 <template>
   <nav id="header" class="d-flex navbar sticky-top navbar-dark bg-dark">
-    <a href="#" @click="go('sections')" class="navbar-brand">
+    <a href="#" @click="goSections" class="navbar-brand">
       <!-- <img src="/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt=""> -->
       {{ appName }}
     </a>
@@ -10,7 +10,7 @@
         {{ username }}
       </a>
       <div class="dropdown-menu dropdown-menu-right" style="left: initial; right: 0">
-        <a href="#" @click="go('settings')" class="dropdown-item">Settings</a>
+        <a href="#" @click="goSettings" class="dropdown-item">Settings</a>
         <a href="/logout" class="dropdown-item">Quit</a>
       </div>
     </div>
@@ -34,14 +34,9 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'go'
-    ]),
-    ...mapActions([
-      'updateUsername'
+      'goSections',
+      'goSettings'
     ])
-  },
-  mounted () {
-    this.updateUsername()
   }
 }
 </script>

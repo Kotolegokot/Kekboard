@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 import Header from './components/Header.vue'
 import Sections from './components/Sections.vue'
+import Threads from './components/Threads.vue'
 import bootstrap from './bootstrap'
 
 Vue.use(Vuex)
@@ -19,40 +20,36 @@ $(function () {
           name: 'Sections',
           component: Sections
         },
+        threads: {
+          name: 'Threads',
+          component: Threads
+        },
         settings: {
           name: 'Settings',
           component: null
         }
       },
       page: '',
-      sections: [],
-      username: ''
+
+      sections: [],  // for Sections.vue
+      username: '',  // for Header.vue
+      section: '',   // for Threads.vue
     },
     mutations: {
-      go (state, page) {
-        Vue.set(this.state, 'page', state.pages[page])
-        $(document).attr('title', this.getters.title)
+      goSections (state) {
+        Vue.set(this.state, 'page', state.pages.sections)
+      },
+      goThreads (state, section) {
+        Vue.set(this.state, 'page', state.pages.threads)
+        Vue.set(this.state, 'section', section)
+      },
+      goSettings (state) {
+        Vue.set(this.state, 'page', state.pages.settings)
       }
     },
     getters: {
       title: state => state.appName + (state.page ? ' | ' + state.page.name : ''),
       currentView: state => state.page.component
-    },
-    actions: {
-      updateSections ({ state }) {
-        Vue.http.get('/sections').then(response => {
-          state.sections = response.body
-        }, response => {
-          window.location.href = '/login'
-        })
-      },
-      updateUsername ({ state }) {
-        Vue.http.get('/user').then(response => {
-          state.username = response.body.name
-        }, response => {
-          window.location.href = '/login'
-        })
-      }
     }
   })
 
@@ -64,8 +61,26 @@ $(function () {
     store,
     computed: Vuex.mapGetters([
       'currentView'
-    ])
+    ]),
+    updated () {
+      // update title
+      $(document).attr('title', this.$store.getters.title)
+
+      // update sections
+      Vue.http.get('/sections').then(response => {
+        this.$store.state.sections = response.body
+      }, response => {
+        window.location.href = '/login'
+      })
+
+      // update username
+      Vue.http.get('/user').then(response => {
+        this.$store.state.username = response.body.name
+      }, response => {
+        window.location.href = '/login'
+      })
+    }
   })
 
-  vue.$store.commit('go', defaultPage)
+  vue.$store.commit('goSections')
 })
