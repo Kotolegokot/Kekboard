@@ -12931,12 +12931,12 @@ $(function () {
     state: {
       appName: 'Kekboard',
       pages: {
-        sections: {
-          name: 'Sections',
+        main: {
+          name: 'Main',
           component: __WEBPACK_IMPORTED_MODULE_4__components_AppMain_vue___default.a
         },
-        threads: {
-          name: 'Threads',
+        section: {
+          name: 'Section',
           component: __WEBPACK_IMPORTED_MODULE_5__components_AppSection_vue___default.a
         },
         thread: {
@@ -12950,23 +12950,29 @@ $(function () {
       },
       page: '',
 
-      sections: [], // for Sections.vue
-      section: {} // for Threads.vue
+      sections: [],
+      section: {}
     },
     mutations: {
-      goSections: function goSections(state) {
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(this.state, 'page', state.pages.sections);
-      },
-      goThreads: function goThreads(state, section) {
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(this.state, 'page', state.pages.threads);
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(this.state, 'section', section);
-      },
-      goThread: function goThread(state, thread) {
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(this.state, 'page', state.pages.thread);
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(this.state, 'thread', thread);
-      },
-      goSettings: function goSettings(state) {
-        __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(this.state, 'page', state.pages.settings);
+      go: function go(state, options) {
+        switch (options.page) {
+          case 'main':
+            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'page', state.pages.main);
+            break;
+          case 'section':
+            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'page', state.pages.section);
+            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'section', options.section);
+            break;
+          case 'thread':
+            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'page', state.pages.thread);
+            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'thread', options.thread);
+            break;
+          case 'settings':
+            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'page', state.pages.settings);
+            break;
+          default:
+            break;
+        }
       }
     },
     getters: {
@@ -13038,7 +13044,7 @@ $(function () {
     }
   });
 
-  vue.$store.commit('goSections');
+  vue.$store.commit('go', { page: 'main' });
 });
 
 /***/ }),
@@ -47184,7 +47190,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
   computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['appName'])),
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['goSections', 'goSettings'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['go'])),
   mounted: function mounted() {
     var _this = this;
 
@@ -47214,7 +47220,11 @@ var render = function() {
         {
           staticClass: "navbar-brand",
           attrs: { href: "#" },
-          on: { click: _vm.goSections }
+          on: {
+            click: function($event) {
+              _vm.go({ page: "main" })
+            }
+          }
         },
         [_vm._v("\n    " + _vm._s(_vm.appName) + "\n  ")]
       ),
@@ -47242,7 +47252,11 @@ var render = function() {
               {
                 staticClass: "dropdown-item",
                 attrs: { href: "#" },
-                on: { click: _vm.goSettings }
+                on: {
+                  click: function($event) {
+                    _vm.go({ page: "settings" })
+                  }
+                }
               },
               [_vm._v("Settings")]
             ),
@@ -47457,7 +47471,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
           posts[i].answers_to_post = null;
           if (posts[i].answers_to_post_id != 0) {
-            _this.$http.get('/post/' + posts[i].answers_to_post_id).then(function (response) {
+            _this.$root.reqeustPost(posts[i].answers_to_post_id).then(function (response) {
               posts[i].answers_to_post = response.body;
             });
           }
@@ -47898,14 +47912,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'AppSections',
+  name: 'AppMain',
   data: function data() {
     return {
       sections: []
     };
   },
 
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['goThreads'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['go'])),
   mounted: function mounted() {
     var _this = this;
 
@@ -47935,7 +47949,7 @@ var render = function() {
           attrs: { href: "#" },
           on: {
             click: function($event) {
-              _vm.goThreads(section)
+              _vm.go({ page: "section", section: section })
             }
           }
         },
@@ -48103,7 +48117,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'AppThreads',
+  name: 'AppSection',
   data: function data() {
     return {
       threads: [],
@@ -48115,7 +48129,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   components: {
     AppSectionNewThreadForm: __WEBPACK_IMPORTED_MODULE_1__AppSectionNewThreadForm_vue___default.a
   },
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['goThread']), {
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['go']), {
     toggleNewThreadForm: function toggleNewThreadForm() {
       this.showNewThreadForm = !this.showNewThreadForm;
     },
@@ -48126,7 +48140,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         var threads = response.body;
 
         var _loop = function _loop(i) {
-          _this.$http.get('/user/' + threads[i].author_id).then(function (response) {
+          _this.$root.requestUser(threads[i].author_id).then(function (response) {
             _this.$set(threads[i], 'author', response.body);
           });
         };
@@ -48270,6 +48284,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
 
 
 window.$ = __webpack_require__(42);
@@ -48345,6 +48362,16 @@ var render = function() {
           attrs: { type: "text", id: "thread-name", required: "" },
           domProps: { value: _vm.newThreadName },
           on: {
+            keyup: function($event) {
+              if (
+                !("button" in $event) &&
+                _vm._k($event.keyCode, "enter", 13, $event.key)
+              ) {
+                return null
+              }
+              $event.stopPropagation()
+              _vm.createThread($event)
+            },
             input: function($event) {
               if ($event.target.composing) {
                 return
@@ -48409,7 +48436,9 @@ var render = function() {
       "p",
       [
         _vm.showNewThreadForm
-          ? _c("app-new-thread-form", { on: { created: _vm.threadCreated } })
+          ? _c("app-section-new-thread-form", {
+              on: { created: _vm.threadCreated }
+            })
           : _vm._e()
       ],
       1
@@ -48428,7 +48457,7 @@ var render = function() {
               attrs: { href: "#" },
               on: {
                 click: function($event) {
-                  _vm.goThread(thread)
+                  _vm.go({ page: "thread", thread: thread })
                 }
               }
             },

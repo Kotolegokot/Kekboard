@@ -17,12 +17,12 @@ $(() => {
     state: {
       appName: 'Kekboard',
       pages: {
-        sections: {
-          name: 'Sections',
+        main: {
+          name: 'Main',
           component: AppMain
         },
-        threads: {
-          name: 'Threads',
+        section: {
+          name: 'Section',
           component: AppSection
         },
         thread: {
@@ -36,23 +36,29 @@ $(() => {
       },
       page: '',
 
-      sections: [],  // for Sections.vue
-      section: {},   // for Threads.vue
+      sections: [],
+      section: {},
     },
     mutations: {
-      goSections (state) {
-        Vue.set(this.state, 'page', state.pages.sections)
-      },
-      goThreads (state, section) {
-        Vue.set(this.state, 'page', state.pages.threads)
-        Vue.set(this.state, 'section', section)
-      },
-      goThread (state, thread) {
-        Vue.set(this.state, 'page', state.pages.thread)
-        Vue.set(this.state, 'thread', thread)
-      },
-      goSettings (state) {
-        Vue.set(this.state, 'page', state.pages.settings)
+      go(state, options) {
+        switch (options.page) {
+          case 'main':
+            Vue.set(state, 'page', state.pages.main)
+            break;
+          case 'section':
+            Vue.set(state, 'page', state.pages.section)
+            Vue.set(state, 'section', options.section)
+            break;
+          case 'thread':
+            Vue.set(state, 'page', state.pages.thread)
+            Vue.set(state, 'thread', options.thread)
+            break;
+          case 'settings':
+            Vue.set(state, 'page', state.pages.settings)
+            break;
+          default:
+            break;
+        }
       }
     },
     getters: {
@@ -107,5 +113,5 @@ $(() => {
     }
   })
 
-  vue.$store.commit('goSections')
+  vue.$store.commit('go', { page: 'main' })
 })

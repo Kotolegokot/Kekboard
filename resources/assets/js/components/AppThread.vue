@@ -66,7 +66,7 @@ export default {
 
           posts[i].answers_to_post = null
           if(posts[i].answers_to_post_id != 0) {
-            this.$http.get('/post/' + posts[i].answers_to_post_id).then(response => {
+            this.$root.reqeustPost(posts[i].answers_to_post_id).then(response => {
               posts[i].answers_to_post = response.body
             })
           }

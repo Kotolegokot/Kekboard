@@ -9,7 +9,10 @@
     </div>
 
     <div class="form-group">
-      <input v-model.trim="newThreadName" type="text" class="form-control" id="thread-name" required />
+      <input
+        v-model.trim="newThreadName"
+        @keyup.enter.stop="createThread"
+        type="text" class="form-control" id="thread-name" required />
       <small class="form-text text-muted">The name of the new thread</small>
     </div>
 

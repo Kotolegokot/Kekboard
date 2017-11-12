@@ -1,7 +1,7 @@
 <template>
   <ul id="sections" class="list-group">
     <a v-for="section in sections" :key="section.id"
-      @click="goThreads(section)" href="#" class="list-group-item list-group-item-action">
+      @click="go({ page: 'section', section })" href="#" class="list-group-item list-group-item-action">
         <span class="shorthand badge badge-danger">{{ section.shorthand }}</span>
         {{ section.name }}
     </a>
@@ -12,7 +12,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'AppSections',
+  name: 'AppMain',
   data () {
     return {
       sections: []
@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'goThreads',
+      'go',
     ])
   },
   mounted () {

@@ -10,7 +10,7 @@
     </p>
 
     <p>
-      <app-new-thread-form
+      <app-section-new-thread-form
         v-if="showNewThreadForm"
         @created="threadCreated" />
     </p>
@@ -20,7 +20,7 @@
         <a
           v-for="thread in threads"
           :key="thread.id"
-          @click="goThread(thread)"
+          @click="go({ page: 'thread', thread })"
           href="#"
           class="list-group-item list-group-item-action">
             {{ thread.name }}
@@ -37,7 +37,7 @@ import AppSectionNewThreadForm from './AppSectionNewThreadForm.vue'
 import Vue from 'vue'
 
 export default {
-  name: 'AppThreads',
+  name: 'AppSection',
   data () {
     return {
       threads: [],
@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'goThread'
+      'go'
     ]),
     toggleNewThreadForm () {
       this.showNewThreadForm = !this.showNewThreadForm
@@ -64,7 +64,7 @@ export default {
         let threads = response.body
 
         for (let i = 0; i < threads.length; i++) {
-          this.$http.get('/user/' + threads[i].author_id).then(response => {
+          this.$root.requestUser(threads[i].author_id).then(response => {
             this.$set(threads[i], 'author', response.body)
           })
         }
