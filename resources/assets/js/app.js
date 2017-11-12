@@ -72,14 +72,18 @@ $(() => {
       'title'
     ]),
     methods: {
-      requestUser: () => Vue.http.get('/user'),
+      requestCurrentUser: () => Vue.http.get('/user'),
+
+      requestUser: (userId) => Vue.http.get('/user/' + userId),
+
+      requestPost: (postId) => Vue.http.get('/post/' + postId),
 
       requestSections: () => Vue.http.get('/sections'),
 
-      requestThreads: (section) => Vue.http.get('/threads/' + section.id),
+      requestThreads: (sectionId) => Vue.http.get('/threads/' + sectionId),
 
-      requestCreateNewThread: (section, name) => Vue.http.post('/threads/create', {
-        section: section.id,
+      requestCreateNewThread: (sectionId, name) => Vue.http.post('/threads/create', {
+        section: sectionId,
         name
       }, {
         headers: {
@@ -87,10 +91,10 @@ $(() => {
         }
       }),
 
-      requestPosts: (thread) => Vue.http.get('/posts/' + thread.id),
+      requestPosts: (threadId) => Vue.http.get('/posts/' + threadId),
 
-      requestCreateNewPost: (thread, body) => Vue.http.post('/posts/create', {
-        thread: thread.id,
+      requestCreateNewPost: (threadId, body) => Vue.http.post('/posts/create', {
+        thread: threadId,
         body
       }, {
         headers: {

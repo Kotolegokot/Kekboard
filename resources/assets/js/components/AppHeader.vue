@@ -39,7 +39,7 @@ export default {
     ])
   },
   mounted () {
-    this.$root.requestUser().then(response => { this.user = response.body })
+    this.$root.requestCurrentUser().then(response => { this.user = response.body })
   }
 }
 </script>

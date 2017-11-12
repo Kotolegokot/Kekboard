@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     createPost () {
-      this.$root.requestCreateNewPost(this.thread, this.newPostBody).then(response => {
+      this.$root.requestCreateNewPost(this.thread.id, this.newPostBody).then(response => {
         this.errors = []
         this.newPostBody = ''
         this.$emit('created')

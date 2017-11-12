@@ -14,7 +14,7 @@
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    return view('app');
+  return view('app');
 })->name('home');
 
 Route::get('/login', 'LoginController@create')->name('login.create');
@@ -22,19 +22,23 @@ Route::post('/login', 'LoginController@store')->name('login.store');
 Route::get('/logout', 'LoginController@destroy')->name('logout');
 
 Route::get('/user', function (Request $request) {
-    return Auth::check() ? $request->user() : abort(406);
+  return Auth::check() ? $request->user() : abort(406);
 });
 
 Route::get('/user/{user}', function (Request $request, App\User $user) {
-    return Auth::check() ? $user : abort(406);
+  return Auth::check() ? $user : abort(406);
+});
+
+Route::get('/post/{post}', function (Request $request, App\Post $post) {
+  return Auth::check() ? $post : abort(406);
 });
 
 Route::get('/sections', function (Request $request) {
-    return Auth::check() ? App\Section::all() : abort(406);
+  return Auth::check() ? App\Section::all() : abort(406);
 });
 
 Route::get('/threads/{section}', function (Request $request, App\Section $section) {
-    return Auth::check() ? $section->threads : abort(406);
+  return Auth::check() ? $section->threads : abort(406);
 });
 
 Route::post('/threads/create', function (Request $request) {

@@ -12987,21 +12987,29 @@ $(function () {
     store: store,
     computed: __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].mapGetters(['currentView', 'title']),
     methods: {
-      requestUser: function requestUser() {
+      requestCurrentUser: function requestCurrentUser() {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/user');
+      },
+
+      requestUser: function requestUser(userId) {
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/user/' + userId);
+      },
+
+      requestPost: function requestPost(postId) {
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/post/' + postId);
       },
 
       requestSections: function requestSections() {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/sections');
       },
 
-      requestThreads: function requestThreads(section) {
-        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/threads/' + section.id);
+      requestThreads: function requestThreads(sectionId) {
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/threads/' + sectionId);
       },
 
-      requestCreateNewThread: function requestCreateNewThread(section, name) {
+      requestCreateNewThread: function requestCreateNewThread(sectionId, name) {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post('/threads/create', {
-          section: section.id,
+          section: sectionId,
           name: name
         }, {
           headers: {
@@ -13010,13 +13018,13 @@ $(function () {
         });
       },
 
-      requestPosts: function requestPosts(thread) {
-        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/posts/' + thread.id);
+      requestPosts: function requestPosts(threadId) {
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/posts/' + threadId);
       },
 
-      requestCreateNewPost: function requestCreateNewPost(thread, body) {
+      requestCreateNewPost: function requestCreateNewPost(threadId, body) {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post('/posts/create', {
-          thread: thread.id,
+          thread: threadId,
           body: body
         }, {
           headers: {
@@ -47180,7 +47188,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   mounted: function mounted() {
     var _this = this;
 
-    this.$root.requestUser().then(function (response) {
+    this.$root.requestCurrentUser().then(function (response) {
       _this.user = response.body;
     });
   }
@@ -47362,7 +47370,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -47376,8 +47384,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue__ = __webpack_require__(90);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__AppThreadPost_vue__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__AppThreadPost_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__AppThreadPost_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -47409,10 +47419,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
-//
-//
+
 
 
 
@@ -47429,7 +47436,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
   computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['thread'])),
   components: {
-    AppThreadNewPostForm: __WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue___default.a
+    AppThreadNewPostForm: __WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue___default.a,
+    AppThreadPost: __WEBPACK_IMPORTED_MODULE_2__AppThreadPost_vue___default.a
   },
   methods: {
     toggleNewPostForm: function toggleNewPostForm() {
@@ -47438,13 +47446,21 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     updatePosts: function updatePosts() {
       var _this = this;
 
-      this.$root.requestPosts(this.thread).then(function (response) {
+      this.$root.requestPosts(this.thread.id).then(function (response) {
         var posts = response.body;
 
         var _loop = function _loop(i) {
-          _this.$http.get('/user/' + posts[i].author_id).then(function (response) {
-            _this.$set(posts[i], 'author', response.body);
+          posts[i].author = null;
+          _this.$root.requestUser(posts[i].author_id).then(function (response) {
+            posts[i].author = response.body;
           });
+
+          posts[i].answers_to_post = null;
+          if (posts[i].answers_to_post_id != 0) {
+            _this.$http.get('/post/' + posts[i].answers_to_post_id).then(function (response) {
+              posts[i].answers_to_post = response.body;
+            });
+          }
         };
 
         for (var i = 0; i < posts.length; i++) {
@@ -47503,19 +47519,10 @@ var render = function() {
         { staticClass: "list-group", attrs: { id: "posts" } },
         _vm._l(_vm.posts, function(post) {
           return _c(
-            "a",
-            {
-              key: post.id,
-              staticClass: "list-group-item list-group-item-action",
-              attrs: { href: "#" },
-              on: { click: function($event) {} }
-            },
-            [
-              _vm._v("\n          " + _vm._s(post.body) + "\n          "),
-              post.author
-                ? _c("small", [_vm._v("by " + _vm._s(post.author.name))])
-                : _vm._e()
-            ]
+            "p",
+            { key: post.id },
+            [_c("app-thread-post", { attrs: { post: post } })],
+            1
           )
         })
       )
@@ -47673,7 +47680,7 @@ window.$ = __webpack_require__(42);
     createPost: function createPost() {
       var _this = this;
 
-      this.$root.requestCreateNewPost(this.thread, this.newPostBody).then(function (response) {
+      this.$root.requestCreateNewPost(this.thread.id, this.newPostBody).then(function (response) {
         _this.errors = [];
         _this.newPostBody = '';
         _this.$emit('created');
@@ -48115,7 +48122,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     updateThreads: function updateThreads() {
       var _this = this;
 
-      this.$root.requestThreads(this.section).then(function (response) {
+      this.$root.requestThreads(this.section.id).then(function (response) {
         var threads = response.body;
 
         var _loop = function _loop(i) {
@@ -48281,7 +48288,7 @@ window.$ = __webpack_require__(42);
     createThread: function createThread() {
       var _this = this;
 
-      this.$root.requestCreateNewThread(this.section, this.newThreadName).then(function (response) {
+      this.$root.requestCreateNewThread(this.section.id, this.newThreadName).then(function (response) {
         _this.errors = [];
         _this.newThreadName = '';
         _this.$emit('created');
@@ -48444,6 +48451,178 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-78dfb966", module.exports)
+  }
+}
+
+/***/ }),
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(111)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(113)
+/* template */
+var __vue_template__ = __webpack_require__(114)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-f51295dc"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/AppThreadPost.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-f51295dc", Component.options)
+  } else {
+    hotAPI.reload("data-v-f51295dc", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(112);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(5)("9d796616", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-f51295dc\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./AppThreadPost.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-f51295dc\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./AppThreadPost.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 113 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'AppThreadPost',
+  props: {
+    post: {
+      type: Object,
+      required: true
+    }
+  }
+});
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "card", attrs: { id: "post" + _vm.post.id } },
+    [
+      _c("div", { staticClass: "card-body" }, [
+        _vm._v("\n    " + _vm._s(_vm.post.body) + "\n  ")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-footer" }, [
+        _vm.post.author
+          ? _c("span", [
+              _vm._v("\n      by " + _vm._s(_vm.post.author.name) + "\n  ")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.post.answers_to_post
+          ? _c("span", [
+              _vm._v("\n      to "),
+              _c(
+                "a",
+                { attrs: { href: "#post" + _vm.post.answers_to_post.id } },
+                [_vm._v("post " + _vm._s(_vm.post.answers_to_post.id))]
+              )
+            ])
+          : _vm._e()
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-f51295dc", module.exports)
   }
 }
 

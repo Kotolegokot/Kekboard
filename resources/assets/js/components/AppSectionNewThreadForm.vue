@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     createThread () {
-      this.$root.requestCreateNewThread(this.section, this.newThreadName).then(response => {
+      this.$root.requestCreateNewThread(this.section.id, this.newThreadName).then(response => {
         this.errors = []
         this.newThreadName = ''
         this.$emit('created')

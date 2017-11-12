@@ -60,7 +60,7 @@ export default {
       this.showNewThreadForm = !this.showNewThreadForm
     },
     updateThreads () {
-      this.$root.requestThreads(this.section).then(response => {
+      this.$root.requestThreads(this.section.id).then(response => {
         let threads = response.body
 
         for (let i = 0; i < threads.length; i++) {

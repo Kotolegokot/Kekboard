@@ -17,15 +17,11 @@
 
     <p>
       <ul id="posts" class="list-group">
-        <a
+        <p
           v-for="post in posts"
-          :key="post.id"
-          @click=""
-          href="#"
-          class="list-group-item list-group-item-action">
-            {{ post.body }}
-            <small v-if="post.author">by {{ post.author.name }}</small>
-          </a>
+          :key="post.id">
+          <app-thread-post :post="post" />
+        </p>
       </ul>
     </p>
   </div>
@@ -34,6 +30,7 @@
 <script>
 import { mapState } from 'vuex'
 import AppThreadNewPostForm from './AppThreadNewPostForm.vue'
+import AppThreadPost from './AppThreadPost.vue'
 import Vue from 'vue'
 
 export default {
@@ -50,20 +47,29 @@ export default {
     ])
   },
   components: {
-    AppThreadNewPostForm
+    AppThreadNewPostForm,
+    AppThreadPost
   },
   methods: {
     toggleNewPostForm () {
       this.showNewPostForm = !this.showNewPostForm
     },
     updatePosts () {
-      this.$root.requestPosts(this.thread).then(response => {
+      this.$root.requestPosts(this.thread.id).then(response => {
         let posts = response.body
 
         for (let i = 0; i < posts.length; i++) {
-          this.$http.get('/user/' + posts[i].author_id).then(response => {
-            this.$set(posts[i], 'author', response.body)
+          posts[i].author = null
+          this.$root.requestUser(posts[i].author_id).then(response => {
+            posts[i].author = response.body
           })
+
+          posts[i].answers_to_post = null
+          if(posts[i].answers_to_post_id != 0) {
+            this.$http.get('/post/' + posts[i].answers_to_post_id).then(response => {
+              posts[i].answers_to_post = response.body
+            })
+          }
         }
 
         this.posts = posts
