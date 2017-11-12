@@ -1,8 +1,9 @@
 <template>
   <ul id="sections" class="list-group">
-    <a v-for="section in sections" @click="goThreads(section)" href="#" class="list-group-item list-group-item-action">
-      <span class="shorthand badge badge-danger">{{ section.shorthand }}</span>
-      {{ section.name }}
+    <a v-for="section in sections" :key="section.id"
+      @click="goThreads(section)" href="#" class="list-group-item list-group-item-action">
+        <span class="shorthand badge badge-danger">{{ section.shorthand }}</span>
+        {{ section.name }}
     </a>
   </ul>
 </template>
@@ -14,17 +15,16 @@ export default {
   name: 'sections',
   data () {
     return {
+      sections: []
     }
-  },
-  computed: {
-    ...mapState([
-      'sections',
-    ])
   },
   methods: {
     ...mapMutations([
       'goThreads',
     ])
+  },
+  mounted () {
+    this.$root.requestSections().then(response => { this.sections = response.body })
   }
 }
 </script>

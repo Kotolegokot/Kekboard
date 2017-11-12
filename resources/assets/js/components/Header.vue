@@ -7,7 +7,7 @@
 
     <div id="menu" class="dropdown ml-auto">
       <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" style="color: white">
-        {{ username }}
+        {{ user.name }}
       </a>
       <div class="dropdown-menu dropdown-menu-right" style="left: initial; right: 0">
         <a href="#" @click="goSettings" class="dropdown-item">Settings</a>
@@ -24,12 +24,12 @@ export default {
   name: 'header',
   data () {
     return {
+      user: {}
     }
   },
   computed: {
     ...mapState([
-      'appName',
-      'username'
+      'appName'
     ])
   },
   methods: {
@@ -37,6 +37,9 @@ export default {
       'goSections',
       'goSettings'
     ])
+  },
+  mounted () {
+    this.$root.requestUser().then(response => { this.user = response.body })
   }
 }
 </script>

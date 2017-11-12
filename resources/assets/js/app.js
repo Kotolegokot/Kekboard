@@ -11,7 +11,7 @@ Vue.use(VueResource)
 
 const defaultPage = 'sections'
 
-$(function () {
+$(() => {
   const store = new Vuex.Store({
     state: {
       appName: 'Kekboard',
@@ -32,8 +32,7 @@ $(function () {
       page: '',
 
       sections: [],  // for Sections.vue
-      username: '',  // for Header.vue
-      section: '',   // for Threads.vue
+      section: {},   // for Threads.vue
     },
     mutations: {
       goSections (state) {
@@ -60,25 +59,16 @@ $(function () {
     },
     store,
     computed: Vuex.mapGetters([
-      'currentView'
+      'currentView',
+      'title'
     ]),
+    methods: {
+      requestUser: () => Vue.http.get('/user'),
+      requestSections: () => Vue.http.get('/sections'),
+      requestThreads: (section) => Vue.http.get('/threads/' + section.id),
+    },
     updated () {
-      // update title
-      $(document).attr('title', this.$store.getters.title)
-
-      // update sections
-      Vue.http.get('/sections').then(response => {
-        this.$store.state.sections = response.body
-      }, response => {
-        window.location.href = '/login'
-      })
-
-      // update username
-      Vue.http.get('/user').then(response => {
-        this.$store.state.username = response.body.name
-      }, response => {
-        window.location.href = '/login'
-      })
+      $(document).attr('title', this.title)
     }
   })
 
