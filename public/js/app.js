@@ -47471,7 +47471,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
           posts[i].answers_to_post = null;
           if (posts[i].answers_to_post_id != 0) {
-            _this.$root.reqeustPost(posts[i].answers_to_post_id).then(function (response) {
+            _this.$root.requestPost(posts[i].answers_to_post_id).then(function (response) {
               posts[i].answers_to_post = response.body;
             });
           }

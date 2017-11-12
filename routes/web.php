@@ -59,7 +59,21 @@ Route::post('/threads/create', function (Request $request) {
 });
 
 Route::get('/posts/{thread}', function (Request $request, App\Thread $thread) {
-  return Auth::check() ? $thread->posts : abort(406);
+  if (Auth::guest()) {
+    return abort(406);
+  }
+
+  $posts_ = $thread->posts->sortByDesc(function ($post) {
+    return new DateTime($post->created_at);
+  });
+
+  $posts = [];
+
+  foreach ($posts_->keys() as $key) {
+    array_push($posts, $posts_[$key]);
+  }
+
+  return $posts;
 });
 
 Route::post('/posts/create', function (Request $request) {
