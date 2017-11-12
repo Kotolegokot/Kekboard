@@ -36,3 +36,24 @@ Route::get('/sections', function (Request $request) {
 Route::get('/threads/{section}', function (Request $request, App\Section $section) {
     return Auth::check() ? $section->threads : abort(406);
 });
+
+Route::post('/threads/create', function (Request $request) {
+  /*if (App\Thread::where('name', $request->name)->first()) {
+    return abort(403, "A thread with that name already exists!");
+}*/
+
+  $request->validate([
+    'name' => 'required|min:1|max:255|unique:threads,name',
+    'section' => 'required|exists:sections,id',
+  ]);
+
+  $section = App\Section::find($request->section);
+
+  $thread = new App\Thread;
+  $thread->name = $request->name;
+  $thread->section_id = $section->id;
+  $thread->author_id = Auth::id();
+  $thread->save();
+
+  return [];
+});

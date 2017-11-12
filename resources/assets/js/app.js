@@ -66,6 +66,14 @@ $(() => {
       requestUser: () => Vue.http.get('/user'),
       requestSections: () => Vue.http.get('/sections'),
       requestThreads: (section) => Vue.http.get('/threads/' + section.id),
+      requestCreateNewThread: (section, name) => Vue.http.post('/threads/create', {
+        section: section.id,
+        name
+      }, {
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      })
     },
     updated () {
       $(document).attr('title', this.title)

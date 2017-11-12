@@ -1,19 +1,54 @@
 <template>
   <div class="card card-body" id="new-thread-form">
+    <div v-if="errors.length" class="alert alert-danger">
+      <ul id="errors">
+        <li v-for="error in errors">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+
     <div class="form-group">
-      <input type="text" class="form-control" id="thread-name" required autofocus />
+      <input v-model.trim="newThreadName" type="text" class="form-control" id="thread-name" required />
       <small class="form-text text-muted">The name of the new thread</small>
     </div>
 
-    <a href="#" @click="" class="btn btn-primary">Create</a>
+    <a href="#" @click="createThread" class="btn btn-primary">Create</a>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+window.$ = require('jquery')
+
 export default {
-  name: 'new-thread',
+  name: 'NewThreadForm',
   data () {
-    return {}
+    return {
+      newThreadName: '',
+      errors: []
+    }
+  },
+  computed: {
+    ...mapState([
+      'section'
+    ])
+  },
+  methods: {
+    createThread () {
+      this.$root.requestCreateNewThread(this.section, this.newThreadName).then(response => {
+        this.errors = []
+        this.newThreadName = ''
+        this.$emit('created')
+      }).catch(response => {
+        this.errors = Object.values(response.body.errors).flatten()
+      }).finally(response => {
+        $("input#thread-name").focus()
+      })
+    }
+  },
+  mounted () {
+    $("input#thread-name").focus()
   }
 }
 </script>
@@ -21,5 +56,10 @@ export default {
 <style scoped>
 #new-thread-form {
   width: 40%;
+}
+
+ul#errors {
+  margin-bottom: 0;
+  list-style-type: none;
 }
 </style>

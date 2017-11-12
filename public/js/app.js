@@ -12984,6 +12984,16 @@ $(function () {
       },
       requestThreads: function requestThreads(section) {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/threads/' + section.id);
+      },
+      requestCreateNewThread: function requestCreateNewThread(section, name) {
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post('/threads/create', {
+          section: section.id,
+          name: name
+        }, {
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
       }
     },
     updated: function updated() {
@@ -14909,7 +14919,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'header',
+  name: 'Header',
   data: function data() {
     return {
       user: {}
@@ -15149,7 +15159,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'sections',
+  name: 'Sections',
   data: function data() {
     return {
       sections: []
@@ -15297,7 +15307,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -15346,13 +15356,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
 
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  names: 'threads',
+  names: 'Threads',
   data: function data() {
     return {
       threads: [],
@@ -15367,24 +15380,35 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   methods: {
     toggleNewThreadForm: function toggleNewThreadForm() {
       this.showNewThreadForm = !this.showNewThreadForm;
+    },
+    updateThreads: function updateThreads() {
+      var _this = this;
+
+      this.$root.requestThreads(this.section).then(function (response) {
+        var threads = response.body;
+
+        var _loop = function _loop(i) {
+          _this.$http.get('/user/' + threads[i].author_id).then(function (response) {
+            _this.$set(threads[i], 'author', response.body);
+            threads[i].author = response.body;
+          });
+        };
+
+        for (var i = 0; i < threads.length; i++) {
+          _loop(i);
+        }
+
+        _this.threads = threads;
+      });
+    },
+    threadCreated: function threadCreated() {
+      this.updateThreads();
+      this.toggleNewThreadForm();
     }
   },
   mounted: function mounted() {
-    var _this = this;
-
-    this.$root.requestThreads(this.section).then(function (response) {
-      _this.threads = response.body;
-
-      var _loop = function _loop(i) {
-        _this.$http.get('/user/' + _this.threads[i].author_id).then(function (response) {
-          _this.$set(_this.threads[i], 'author', response.body);
-          _this.threads[i].author = response.body;
-        });
-      };
-
-      for (var i = 0; i < _this.threads.length; i++) {
-        _loop(i);
-      }
+    this.$nextTick(function () {
+      this.updateThreads();
     });
   }
 });
@@ -15476,7 +15500,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n#new-thread-form[data-v-50ef1c75] {\n  width: 40%;\n}\n", ""]);
+exports.push([module.i, "\n#new-thread-form[data-v-50ef1c75] {\n  width: 40%;\n}\nul#errors[data-v-50ef1c75] {\n  margin-bottom: 0;\n  list-style-type: none;\n}\n", ""]);
 
 // exports
 
@@ -15487,6 +15511,17 @@ exports.push([module.i, "\n#new-thread-form[data-v-50ef1c75] {\n  width: 40%;\n}
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(1);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -15499,10 +15534,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+window.$ = __webpack_require__(42);
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'new-thread',
+  name: 'NewThreadForm',
   data: function data() {
-    return {};
+    return {
+      newThreadName: '',
+      errors: []
+    };
+  },
+
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['section'])),
+  methods: {
+    createThread: function createThread() {
+      var _this = this;
+
+      this.$root.requestCreateNewThread(this.section, this.newThreadName).then(function (response) {
+        _this.errors = [];
+        _this.newThreadName = '';
+        _this.$emit('created');
+      }).catch(function (response) {
+        _this.errors = Object.values(response.body.errors).flatten();
+      }).finally(function (response) {
+        $("input#thread-name").focus();
+      });
+    }
+  },
+  mounted: function mounted() {
+    $("input#thread-name").focus();
   }
 });
 
@@ -15518,37 +15579,65 @@ var render = function() {
     "div",
     { staticClass: "card card-body", attrs: { id: "new-thread-form" } },
     [
-      _vm._m(0),
+      _vm.errors.length
+        ? _c("div", { staticClass: "alert alert-danger" }, [
+            _c(
+              "ul",
+              { attrs: { id: "errors" } },
+              _vm._l(_vm.errors, function(error) {
+                return _c("li", [
+                  _vm._v("\n        " + _vm._s(error) + "\n      ")
+                ])
+              })
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model.trim",
+              value: _vm.newThreadName,
+              expression: "newThreadName",
+              modifiers: { trim: true }
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "text", id: "thread-name", required: "" },
+          domProps: { value: _vm.newThreadName },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.newThreadName = $event.target.value.trim()
+            },
+            blur: function($event) {
+              _vm.$forceUpdate()
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("small", { staticClass: "form-text text-muted" }, [
+          _vm._v("The name of the new thread")
+        ])
+      ]),
       _vm._v(" "),
       _c(
         "a",
         {
           staticClass: "btn btn-primary",
           attrs: { href: "#" },
-          on: { click: function($event) {} }
+          on: { click: _vm.createThread }
         },
         [_vm._v("Create")]
       )
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { type: "text", id: "thread-name", required: "", autofocus: "" }
-      }),
-      _vm._v(" "),
-      _c("small", { staticClass: "form-text text-muted" }, [
-        _vm._v("The name of the new thread")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -15579,7 +15668,15 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _c("p", [_vm.showNewThreadForm ? _c("new-thread-form") : _vm._e()], 1),
+    _c(
+      "p",
+      [
+        _vm.showNewThreadForm
+          ? _c("new-thread-form", { on: { created: _vm.threadCreated } })
+          : _vm._e()
+      ],
+      1
+    ),
     _vm._v(" "),
     _c("p", [
       _c(
@@ -15673,6 +15770,18 @@ if (token) {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+
+Array.prototype.flatten = function () {
+  var ret = [];
+  for (var i = 0; i < this.length; i++) {
+    if (Array.isArray(this[i])) {
+      ret = ret.concat(this[i].flatten());
+    } else {
+      ret.push(this[i]);
+    }
+  }
+  return ret;
+};
 
 /***/ }),
 /* 40 */
