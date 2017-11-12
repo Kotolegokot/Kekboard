@@ -33,7 +33,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import AppNewThreadForm from './AppNewThreadForm.vue'
+import AppSectionNewThreadForm from './AppSectionNewThreadForm.vue'
 import Vue from 'vue'
 
 export default {
@@ -50,7 +50,7 @@ export default {
     ])
   },
   components: {
-    AppNewThreadForm
+    AppSectionNewThreadForm
   },
   methods: {
     ...mapMutations([

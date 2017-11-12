@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 import AppHeader from './components/AppHeader.vue'
-import AppSections from './components/AppSections.vue'
-import AppThreads from './components/AppThreads.vue'
+import AppMain from './components/AppMain.vue'
+import AppSection from './components/AppSection.vue'
 import AppThread from './components/AppThread.vue'
 import bootstrap from './bootstrap'
 
@@ -19,11 +19,11 @@ $(() => {
       pages: {
         sections: {
           name: 'Sections',
-          component: AppSections
+          component: AppMain
         },
         threads: {
           name: 'Threads',
-          component: AppThreads
+          component: AppSection
         },
         thread: {
           name: 'Thread',
