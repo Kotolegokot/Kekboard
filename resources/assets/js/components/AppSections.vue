@@ -12,7 +12,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'Sections',
+  name: 'AppSections',
   data () {
     return {
       sections: []

@@ -21,7 +21,7 @@
 import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
-  name: 'Header',
+  name: 'AppHeader',
   data () {
     return {
       user: {}

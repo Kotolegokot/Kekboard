@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
-import Header from './components/Header.vue'
-import Sections from './components/Sections.vue'
-import Threads from './components/Threads.vue'
+import AppHeader from './components/AppHeader.vue'
+import AppSections from './components/AppSections.vue'
+import AppThreads from './components/AppThreads.vue'
+import AppThread from './components/AppThread.vue'
 import bootstrap from './bootstrap'
 
 Vue.use(Vuex)
@@ -18,11 +19,15 @@ $(() => {
       pages: {
         sections: {
           name: 'Sections',
-          component: Sections
+          component: AppSections
         },
         threads: {
           name: 'Threads',
-          component: Threads
+          component: AppThreads
+        },
+        thread: {
+          name: 'Thread',
+          component: AppThread
         },
         settings: {
           name: 'Settings',
@@ -42,6 +47,10 @@ $(() => {
         Vue.set(this.state, 'page', state.pages.threads)
         Vue.set(this.state, 'section', section)
       },
+      goThread (state, thread) {
+        Vue.set(this.state, 'page', state.pages.thread)
+        Vue.set(this.state, 'thread', thread)
+      },
       goSettings (state) {
         Vue.set(this.state, 'page', state.pages.settings)
       }
@@ -55,7 +64,7 @@ $(() => {
   let vue = new Vue({
     el: "#app",
     components: {
-        'app-header': Header,
+        AppHeader
     },
     store,
     computed: Vuex.mapGetters([
@@ -64,8 +73,11 @@ $(() => {
     ]),
     methods: {
       requestUser: () => Vue.http.get('/user'),
+
       requestSections: () => Vue.http.get('/sections'),
+
       requestThreads: (section) => Vue.http.get('/threads/' + section.id),
+
       requestCreateNewThread: (section, name) => Vue.http.post('/threads/create', {
         section: section.id,
         name
@@ -73,9 +85,20 @@ $(() => {
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
+      }),
+
+      requestPosts: (thread) => Vue.http.get('/posts/' + thread.id),
+
+      requestCreateNewPost: (thread, body) => Vue.http.post('/posts/create', {
+        thread: thread.id,
+        body
+      }, {
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
       })
     },
-    updated () {
+    mounted () {
       $(document).attr('title', this.title)
     }
   })

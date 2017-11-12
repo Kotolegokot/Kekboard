@@ -22,7 +22,7 @@ import { mapState } from 'vuex'
 window.$ = require('jquery')
 
 export default {
-  name: 'NewThreadForm',
+  name: 'AppNewThreadForm',
   data () {
     return {
       newThreadName: '',

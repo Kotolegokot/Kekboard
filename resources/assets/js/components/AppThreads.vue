@@ -10,7 +10,7 @@
     </p>
 
     <p>
-      <new-thread-form
+      <app-new-thread-form
         v-if="showNewThreadForm"
         @created="threadCreated" />
     </p>
@@ -20,12 +20,11 @@
         <a
           v-for="thread in threads"
           :key="thread.id"
-          @click=""
+          @click="goThread(thread)"
           href="#"
           class="list-group-item list-group-item-action">
             {{ thread.name }}
             <small v-if="thread.author">by {{ thread.author.name }}</small>
-            <!-- TODO: remove v-if -->
         </a>
       </ul>
     </p>
@@ -33,12 +32,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import NewThreadForm from './NewThreadForm.vue'
+import { mapState, mapMutations } from 'vuex'
+import AppNewThreadForm from './AppNewThreadForm.vue'
 import Vue from 'vue'
 
 export default {
-  names: 'Threads',
+  name: 'AppThreads',
   data () {
     return {
       threads: [],
@@ -51,9 +50,12 @@ export default {
     ])
   },
   components: {
-    NewThreadForm
+    AppNewThreadForm
   },
   methods: {
+    ...mapMutations([
+      'goThread'
+    ]),
     toggleNewThreadForm () {
       this.showNewThreadForm = !this.showNewThreadForm
     },
@@ -64,7 +66,6 @@ export default {
         for (let i = 0; i < threads.length; i++) {
           this.$http.get('/user/' + threads[i].author_id).then(response => {
             this.$set(threads[i], 'author', response.body)
-            threads[i].author = response.body
           })
         }
 
