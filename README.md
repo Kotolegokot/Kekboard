@@ -1,12 +1,12 @@
 A stupid imageboard made with Laravel and Vue.js
 
-== Roadmap
+== Roadmap ==
 
-=== Bugs
+=== Bugs ===
 
 * Fix collapsing forms' width on narrow screens
 
-=== Suggestions
+=== Suggestions ===
 
 * Adequate design
 * Uploading images
