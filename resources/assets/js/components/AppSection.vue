@@ -1,12 +1,11 @@
 <template>
   <div id="threads">
     <p>
-      <a
-        class="btn btn-primary"
-        href="#"
+      <span
+        class="link btn btn-primary"
         @click="toggleNewThreadForm">
         New thread
-      </a>
+      </span>
     </p>
 
     <p>
@@ -17,15 +16,14 @@
 
     <p>
       <ul id="threads-list" class="list-group">
-        <a
+        <span
           v-for="thread in threads"
           :key="thread.id"
-          @click="go({ page: 'thread', thread })"
-          href="#"
-          class="list-group-item list-group-item-action">
+          @click="go({ page: 'thread',  thread })"
+          class="link list-group-item list-group-item-action">
             {{ thread.name }}
             <small v-if="thread.author">by {{ thread.author.name }}</small>
-        </a>
+        </span>
       </ul>
     </p>
   </div>
@@ -46,7 +44,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'section'
+      'page',
+      'options'
     ])
   },
   components: {
@@ -60,7 +59,7 @@ export default {
       this.showNewThreadForm = !this.showNewThreadForm
     },
     updateThreads () {
-      Vue.requestThreads(this.section.id).then(response => {
+      Vue.requestThreads(this.options.section.id).then(response => {
         let threads = response.body
 
         for (let i = 0; i < threads.length; i++) {

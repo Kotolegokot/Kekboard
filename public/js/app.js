@@ -23173,6 +23173,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__bootstrap__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__bootstrap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__bootstrap__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__plugins_KekboardAPI_js__ = __webpack_require__(82);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
 
 
 
@@ -23187,63 +23191,70 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_resource__["a" /* default */]);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_8__plugins_KekboardAPI_js__["a" /* default */]);
 
-var defaultPage = 'sections';
-
 $(function () {
+  __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages = {
+    main: {
+      title: '',
+      url: '/',
+      component: __WEBPACK_IMPORTED_MODULE_4__components_AppMain_vue___default.a
+    },
+    section: {
+      title: 'Section',
+      url: function url(options) {
+        return '/section/' + options.section.id;
+      },
+      component: __WEBPACK_IMPORTED_MODULE_5__components_AppSection_vue___default.a
+    },
+    thread: {
+      title: 'Thread',
+      url: function url(options) {
+        return '/thread/' + options.thread.id;
+      },
+      component: __WEBPACK_IMPORTED_MODULE_6__components_AppThread_vue___default.a
+    },
+    settings: {
+      title: 'Settings',
+      url: '/settings',
+      component: null
+    }
+  };
+
   var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     state: {
       appName: 'Kekboard',
-      pages: {
-        main: {
-          name: 'Main',
-          component: __WEBPACK_IMPORTED_MODULE_4__components_AppMain_vue___default.a
-        },
-        section: {
-          name: 'Section',
-          component: __WEBPACK_IMPORTED_MODULE_5__components_AppSection_vue___default.a
-        },
-        thread: {
-          name: 'Thread',
-          component: __WEBPACK_IMPORTED_MODULE_6__components_AppThread_vue___default.a
-        },
-        settings: {
-          name: 'Settings',
-          component: null
-        }
-      },
-      page: '',
+      page: 'main',
+      pageTitle: '',
+      pageUrl: '',
+      options: {},
 
-      sections: [],
-      section: {}
+      sections: []
     },
     mutations: {
-      go: function go(state, options) {
-        switch (options.page) {
-          case 'main':
-            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'page', state.pages.main);
-            break;
-          case 'section':
-            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'page', state.pages.section);
-            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'section', options.section);
-            break;
-          case 'thread':
-            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'page', state.pages.thread);
-            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'thread', options.thread);
-            break;
-          case 'settings':
-            __WEBPACK_IMPORTED_MODULE_0_vue___default.a.set(state, 'page', state.pages.settings);
-            break;
-          default:
-            break;
+      go: function go(state, _ref) {
+        var page = _ref.page,
+            _ref$pushState = _ref.pushState,
+            pushState = _ref$pushState === undefined ? true : _ref$pushState,
+            options = _objectWithoutProperties(_ref, ['page', 'pushState']);
+
+        state.page = page;
+        state.pageTitle = typeof __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages[page].title == 'function' ? __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages[page].title(options) : __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages[page].title;
+        state.pageUrl = typeof __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages[page].url == 'function' ? __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages[page].url(options) : __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages[page].url;
+        state.options = options;
+
+        if (pushState) {
+          window.history.pushState(_extends({ page: page }, options), this.title, state.pageUrl);
         }
+      },
+      logout: function logout() {
+        window.location.href = '/logout';
       }
     },
     getters: {
       title: function title(state) {
-        return state.appName + (state.page ? ' | ' + state.page.name : '');
+        return state.appName + (state.pageTitle ? ' | ' + state.pageTitle : '');
       },
       currentView: function currentView(state) {
-        return state.page.component;
+        return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages[state.page].component;
       }
     }
   });
@@ -23255,12 +23266,16 @@ $(function () {
     },
     store: store,
     computed: __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].mapGetters(['currentView', 'title']),
-    mounted: function mounted() {
+    updated: function updated() {
       $(document).attr('title', this.title);
     }
   });
 
   vue.$store.commit('go', { page: 'main' });
+
+  window.onpopstate = function (event) {
+    vue.$store.commit('go', _extends({ pushState: false }, event.state));
+  };
 });
 
 /***/ }),
@@ -25189,7 +25204,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
 
   computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['appName'])),
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['go'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapMutations */])(['go', 'logout'])),
   mounted: function mounted() {
     var _this = this;
 
@@ -25215,10 +25230,9 @@ var render = function() {
     },
     [
       _c(
-        "a",
+        "span",
         {
-          staticClass: "navbar-brand",
-          attrs: { href: "#" },
+          staticClass: "link navbar-brand",
           on: {
             click: function($event) {
               _vm.go({ page: "main" })
@@ -25230,11 +25244,11 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "dropdown ml-auto", attrs: { id: "menu" } }, [
         _c(
-          "a",
+          "span",
           {
-            staticClass: "nav-link dropdown-toggle",
+            staticClass: "link nav-link dropdown-toggle",
             staticStyle: { color: "white" },
-            attrs: { href: "#", "data-toggle": "dropdown" }
+            attrs: { "data-toggle": "dropdown" }
           },
           [_vm._v("\n      " + _vm._s(_vm.user.name) + "\n    ")]
         ),
@@ -25247,10 +25261,9 @@ var render = function() {
           },
           [
             _c(
-              "a",
+              "span",
               {
-                staticClass: "dropdown-item",
-                attrs: { href: "#" },
+                staticClass: "link dropdown-item",
                 on: {
                   click: function($event) {
                     _vm.go({ page: "settings" })
@@ -25261,8 +25274,8 @@ var render = function() {
             ),
             _vm._v(" "),
             _c(
-              "a",
-              { staticClass: "dropdown-item", attrs: { href: "/logout" } },
+              "span",
+              { staticClass: "link dropdown-item", on: { click: _vm.logout } },
               [_vm._v("Quit")]
             )
           ]
@@ -25289,6 +25302,7 @@ var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(25)
+  __webpack_require__(83)
 }
 var normalizeComponent = __webpack_require__(2)
 /* script */
@@ -25462,11 +25476,10 @@ var render = function() {
     { staticClass: "list-group", attrs: { id: "sections" } },
     _vm._l(_vm.sections, function(section) {
       return _c(
-        "a",
+        "span",
         {
           key: section.id,
-          staticClass: "list-group-item list-group-item-action",
-          attrs: { href: "#" },
+          staticClass: "link list-group-item list-group-item-action",
           on: {
             click: function($event) {
               _vm.go({ page: "section", section: section })
@@ -25580,7 +25593,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -25629,8 +25642,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
 
 
 
@@ -25645,7 +25656,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['section'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['page', 'options'])),
   components: {
     AppSectionNewThreadForm: __WEBPACK_IMPORTED_MODULE_1__AppSectionNewThreadForm_vue___default.a
   },
@@ -25656,7 +25667,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     updateThreads: function updateThreads() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestThreads(this.section.id).then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestThreads(this.options.section.id).then(function (response) {
         var threads = response.body;
 
         var _loop = function _loop(i) {
@@ -25954,10 +25965,9 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c(
-        "a",
+        "span",
         {
-          staticClass: "btn btn-primary",
-          attrs: { href: "#" },
+          staticClass: "link btn btn-primary",
           on: { click: _vm.createThread }
         },
         [_vm._v("Create")]
@@ -25986,10 +25996,9 @@ var render = function() {
   return _c("div", { attrs: { id: "threads" } }, [
     _c("p", [
       _c(
-        "a",
+        "span",
         {
-          staticClass: "btn btn-primary",
-          attrs: { href: "#" },
+          staticClass: "link btn btn-primary",
           on: { click: _vm.toggleNewThreadForm }
         },
         [_vm._v("\n      New thread\n    ")]
@@ -26014,11 +26023,10 @@ var render = function() {
         { staticClass: "list-group", attrs: { id: "threads-list" } },
         _vm._l(_vm.threads, function(thread) {
           return _c(
-            "a",
+            "span",
             {
               key: thread.id,
-              staticClass: "list-group-item list-group-item-action",
-              attrs: { href: "#" },
+              staticClass: "link list-group-item list-group-item-action",
               on: {
                 click: function($event) {
                   _vm.go({ page: "thread", thread: thread })
@@ -26178,7 +26186,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['thread'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['options'])),
   components: {
     AppThreadPost: __WEBPACK_IMPORTED_MODULE_1__AppThreadPost_vue___default.a
   },
@@ -26189,16 +26197,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     updatePosts: function updatePosts() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestPosts(this.thread.id).then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestPosts(this.options.thread.id).then(function (response) {
         var posts = response.body;
 
         var _loop = function _loop(i) {
-          posts[i].author = null;
-          __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestUser(posts[i].author_id).then(function (response) {
-            posts[i].author = response.body;
-          });
-
-          posts[i].answers_to_post = null;
+          posts[i].answers_to_post = {};
           if (posts[i].answers_to_post_id != 0) {
             __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestPost(posts[i].answers_to_post_id).then(function (response) {
               posts[i].answers_to_post = response.body;
@@ -26609,10 +26612,10 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c(
-        "a",
+        "span",
         {
-          staticClass: "ml-auto btn btn-primary",
-          attrs: { href: "#", id: "submit" },
+          staticClass: "ml-auto link btn btn-primary",
+          attrs: { id: "submit" },
           on: { click: _vm.createPost }
         },
         [_vm._v("Post")]
@@ -26667,8 +26670,8 @@ var render = function() {
         _c("div", { staticClass: "ml-auto" }, [
           _c("small", [
             _c(
-              "a",
-              { attrs: { href: "#" }, on: { click: _vm.toggleAnswerForm } },
+              "span",
+              { staticClass: "link", on: { click: _vm.toggleAnswerForm } },
               [_vm._v("\n          answer\n        ")]
             )
           ])
@@ -26705,7 +26708,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "thread", attrs: { id: "thread" + _vm.thread.id } },
+    { staticClass: "thread", attrs: { id: "thread" + _vm.options.thread.id } },
     _vm._l(_vm.posts, function(post) {
       return _c("app-thread-post", {
         key: post.id,
@@ -48691,6 +48694,46 @@ window.$ = __webpack_require__(7);
     };
   }
 });
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(84);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("ba530a14", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-77bfacfe\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1&bustCache!./AppMain.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-77bfacfe\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1&bustCache!./AppMain.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.link {\n  cursor: pointer;\n}\n", ""]);
+
+// exports
+
 
 /***/ })
 /******/ ]);

@@ -16,12 +16,12 @@
 
       <div class="ml-auto">
         <small>
-          <a
-            href="#"
+          <span
             @click="toggleAnswerForm"
+            class="link"
             >
             answer
-          </a>
+          </span>
         </small>
       </div>
     </div>

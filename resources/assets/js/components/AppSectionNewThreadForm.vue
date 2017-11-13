@@ -27,7 +27,7 @@
       <small class="form-text text-muted">The head post of the thread</small>
     </div>
 
-    <a href="#" @click="createThread" class="btn btn-primary">Create</a>
+    <span @click="createThread" class="link btn btn-primary">Create</span>
   </div>
 </template>
 

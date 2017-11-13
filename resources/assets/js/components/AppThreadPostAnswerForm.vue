@@ -15,7 +15,7 @@
       </textarea>
     </div>
 
-    <a href="#" @click="createPost" id="submit" class="ml-auto btn btn-primary">Post</a>
+    <span @click="createPost" id="submit" class="ml-auto link btn btn-primary">Post</span>
   </div>
 </template>
 

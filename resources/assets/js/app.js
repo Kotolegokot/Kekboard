@@ -12,60 +12,59 @@ Vue.use(Vuex)
 Vue.use(VueResource)
 Vue.use(KekboardAPI)
 
-const defaultPage = 'sections'
-
 $(() => {
-  const store = new Vuex.Store({
+  Vue.pages = {
+    main: {
+      title: '',
+      url: '/',
+      component: AppMain
+    },
+    section: {
+      title: 'Section',
+      url: options => '/section/' + options.section.id,
+      component: AppSection
+    },
+    thread: {
+      title: 'Thread',
+      url: options => '/thread/' + options.thread.id,
+      component: AppThread
+    },
+    settings: {
+      title: 'Settings',
+      url: '/settings',
+      component: null
+    }
+  }
+
+  let store = new Vuex.Store({
     state: {
       appName: 'Kekboard',
-      pages: {
-        main: {
-          name: 'Main',
-          component: AppMain
-        },
-        section: {
-          name: 'Section',
-          component: AppSection
-        },
-        thread: {
-          name: 'Thread',
-          component: AppThread
-        },
-        settings: {
-          name: 'Settings',
-          component: null
-        }
-      },
-      page: '',
+      page: 'main',
+      pageTitle: '',
+      pageUrl: '',
+      options: {},
 
-      sections: [],
-      section: {},
+      sections: []
     },
     mutations: {
-      go(state, options) {
-        switch (options.page) {
-          case 'main':
-            Vue.set(state, 'page', state.pages.main)
-            break;
-          case 'section':
-            Vue.set(state, 'page', state.pages.section)
-            Vue.set(state, 'section', options.section)
-            break;
-          case 'thread':
-            Vue.set(state, 'page', state.pages.thread)
-            Vue.set(state, 'thread', options.thread)
-            break;
-          case 'settings':
-            Vue.set(state, 'page', state.pages.settings)
-            break;
-          default:
-            break;
+      go(state, { page, pushState = true, ...options }) {
+        state.page = page
+        state.pageTitle = typeof Vue.pages[page].title == 'function' ? Vue.pages[page].title(options) : Vue.pages[page].title
+        state.pageUrl = typeof Vue.pages[page].url == 'function' ? Vue.pages[page].url(options) : Vue.pages[page].url
+        state.options = options
+
+        if (pushState) {
+          window.history.pushState({ page, ...options }, this.title, state.pageUrl)
         }
+      },
+
+      logout () {
+        window.location.href = '/logout'
       }
     },
     getters: {
-      title: state => state.appName + (state.page ? ' | ' + state.page.name : ''),
-      currentView: state => state.page.component
+      title: state => state.appName + (state.pageTitle ? ' | ' + state.pageTitle : ''),
+      currentView: state => Vue.pages[state.page].component
     }
   })
 
@@ -79,10 +78,14 @@ $(() => {
       'currentView',
       'title'
     ]),
-    mounted () {
+    updated () {
       $(document).attr('title', this.title)
     }
   })
 
   vue.$store.commit('go', { page: 'main' })
+
+  window.onpopstate = event => {
+    vue.$store.commit('go', { pushState: false, ...event.state })
+  }
 })

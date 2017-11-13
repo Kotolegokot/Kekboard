@@ -1,5 +1,5 @@
 <template>
-  <div class="thread" :id="'thread' + thread.id">
+  <div class="thread" :id="'thread' + options.thread.id">
     <app-thread-post
       class="post"
       v-for="post in posts"
@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'thread'
+      'options'
     ])
   },
   components: {
@@ -36,16 +36,11 @@ export default {
       this.showNewPostForm = !this.showNewPostForm
     },
     updatePosts () {
-      Vue.requestPosts(this.thread.id).then(response => {
+      Vue.requestPosts(this.options.thread.id).then(response => {
         let posts = response.body
 
         for (let i = 0; i < posts.length; i++) {
-          posts[i].author = null
-          Vue.requestUser(posts[i].author_id).then(response => {
-            posts[i].author = response.body
-          })
-
-          posts[i].answers_to_post = null
+          posts[i].answers_to_post = {}
           if(posts[i].answers_to_post_id != 0) {
             Vue.requestPost(posts[i].answers_to_post_id).then(response => {
               posts[i].answers_to_post = response.body

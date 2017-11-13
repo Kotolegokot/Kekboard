@@ -12,3 +12,6 @@ A stupid imageboard made with Laravel and Vue.js
 * Uploading images
 * Registration
 * Something amazing
+* History
+* Back button
+* Move sections from store.state to AppMain.data
