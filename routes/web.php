@@ -38,7 +38,21 @@ Route::get('/sections', function (Request $request) {
 });
 
 Route::get('/threads/{section}', function (Request $request, App\Section $section) {
-  return Auth::check() ? $section->threads : abort(406);
+  if (Auth::guest()) {
+    return abort(406);
+  }
+
+  $threads_ = $section->threads->sortByDesc(function ($thread) {
+    return new DateTime($thread->created_at);
+  });
+
+  $threads = [];
+
+  foreach ($threads_->keys() as $key) {
+    array_push($threads, $threads_[$key]);
+  }
+
+  return $threads;
 });
 
 Route::post('/threads/create', function (Request $request) {
