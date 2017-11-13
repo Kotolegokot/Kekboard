@@ -48697,7 +48697,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n#brand-name[data-v-ee5cc778] {\n  text-align: center;\n}\nul#sections[data-v-ee5cc778] {\n  list-style: none;\n  padding-left: 32px;\n  padding-right: 32px;\n}\nli.section[data-v-ee5cc778] {\n  color: #7f8c8d;\n  font-family: 'Source Sans Pro', Arial, sans-serif;\n  padding: 4px 0;\n}\nnav[data-v-ee5cc778] {\n  padding-top: 16px;\n}\n", ""]);
 
 // exports
 
@@ -48708,7 +48708,9 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""])
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(1);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -48721,12 +48723,38 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AppSidebar',
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['appName']))
+  data: function data() {
+    return {
+      sections: []
+    };
+  },
+
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["d" /* mapState */])(['appName'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["c" /* mapMutations */])(['go'])),
+  mounted: function mounted() {
+    var _this = this;
+
+    __WEBPACK_IMPORTED_MODULE_0_vue___default.a.requestSections().then(function (response) {
+      _this.sections = response.body;
+    });
+  }
 });
 
 /***/ }),
@@ -48737,21 +48765,39 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("nav", [
+    _c("h3", { attrs: { id: "brand-name" } }, [_vm._v(_vm._s(_vm.appName))]),
+    _vm._v(" "),
+    _c(
+      "ul",
+      { attrs: { id: "sections" } },
+      _vm._l(_vm.sections, function(section) {
+        return _c(
+          "li",
+          {
+            key: section.id,
+            staticClass: "link d-flex section",
+            on: {
+              click: function($event) {
+                _vm.go({ page: "section", section: section })
+              }
+            }
+          },
+          [
+            _c("span", { staticClass: "section-name" }, [
+              _vm._v("\n        " + _vm._s(section.name) + "\n      ")
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "section-shorthand ml-auto" }, [
+              _vm._v("\n        /" + _vm._s(section.shorthand) + "/\n      ")
+            ])
+          ]
+        )
+      })
+    )
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("nav", [
-      _c("p"),
-      _c("h1", { staticClass: "text-center" }, [_vm._v("\n      LEL\n    ")]),
-      _vm._v(" "),
-      _c("p")
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -49020,7 +49066,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n#sidebar[data-v-3f7618be] {\n  position: absolute;\n  left: 0;\n  top: 0;\n  bottom: 0;\n  width: 300px;\n  max-width: 90%;\n  -webkit-transition-property: left;\n  transition-property: left;\n  -webkit-transition-duration: 0.2s;\n          transition-duration: 0.2s;\n  -webkit-transition-timing-function: linear;\n          transition-timing-function: linear;\n  border-right: 1px solid rgba(0, 0, 0, 0.07);\n}\n#sidebar.hidden[data-v-3f7618be] {\n  left: -300px;\n}\n#header[data-v-3f7618be] {\n  height: 34px;\n  margin-bottom: 16px;\n}\n#content[data-v-3f7618be] {\n  position: absolute;\n  left: 300px;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  -webkit-transition-property: left;\n  transition-property: left;\n  -webkit-transition-duration: 0.2s;\n          transition-duration: 0.2s;\n  -webkit-transition-timing-function: linear;\n          transition-timing-function: linear;\n}\n#content.widen[data-v-3f7618be] {\n  left: 0;\n}\n#component[data-v-3f7618be] {\n  max-width: 800px;\n  margin: 0 auto;\n}\n", ""]);
+exports.push([module.i, "\n#sidebar[data-v-3f7618be] {\n  position: absolute;\n  left: 0;\n  top: 0;\n  bottom: 0;\n  width: 300px;\n  max-width: 90%;\n  -webkit-transition-property: left;\n  transition-property: left;\n  -webkit-transition-duration: 0.2s;\n          transition-duration: 0.2s;\n  -webkit-transition-timing-function: linear;\n          transition-timing-function: linear;\n  border-right: 1px solid rgba(0, 0, 0, 0.07);\n}\n#sidebar.hidden[data-v-3f7618be] {\n  left: -300px;\n}\n#header[data-v-3f7618be] {\n  height: 34px;\n  margin-bottom: 16px;\n}\n#content[data-v-3f7618be] {\n  position: absolute;\n  left: 300px;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  -webkit-transition-property: left;\n  transition-property: left;\n  -webkit-transition-duration: 0.2s;\n          transition-duration: 0.2s;\n  -webkit-transition-timing-function: linear;\n          transition-timing-function: linear;\n}\n#content.expanded[data-v-3f7618be] {\n  left: 0;\n}\n#component[data-v-3f7618be] {\n  max-width: 800px;\n  margin: 0 auto;\n}\n", ""]);
 
 // exports
 
@@ -49095,13 +49141,13 @@ var render = function() {
     "div",
     [
       _c("app-sidebar", {
-        class: _vm.sidebarShown ? "" : "hidden",
+        class: { hidden: !_vm.sidebarShown },
         attrs: { id: "sidebar" }
       }),
       _vm._v(" "),
       _c(
         "div",
-        { class: _vm.sidebarShown ? "" : "widen", attrs: { id: "content" } },
+        { class: { expanded: !_vm.sidebarShown }, attrs: { id: "content" } },
         [
           _c("app-header", {
             attrs: { id: "header" },

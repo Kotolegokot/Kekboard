@@ -1,11 +1,11 @@
 <template>
   <div>
     <app-sidebar
-      :class="sidebarShown ? '' : 'hidden'"
+      :class="{ hidden: !sidebarShown }"
       id="sidebar" />
 
     <div
-      :class="sidebarShown ? '' : 'widen'"
+      :class="{ expanded: !sidebarShown }"
       id="content">
       <app-header
         id="header"
@@ -81,7 +81,7 @@ export default {
   transition-timing-function: linear;
 }
 
-#content.widen {
+#content.expanded {
   left: 0;
 }
 
