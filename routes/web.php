@@ -84,10 +84,14 @@ Route::post('/posts/create', function (Request $request) {
 
   $thread = App\Thread::find($request->thread);
 
+  if (!$request->answers_to_post) {
+    $request->answers_to_post = 0;
+  }
+
   $post = new App\Post;
   $post->body = $request->body;
   $post->thread_id = $thread->id;
-  $post->answers_to_post_id = 0; // TODO
+  $post->answers_to_post_id = $request->answers_to_post;
   $post->author_id = Auth::id();
   $post->save();
 

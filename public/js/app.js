@@ -48570,7 +48570,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -48581,6 +48581,8 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //
@@ -48624,15 +48626,9 @@ var render = function() {
         _vm._v("\n    " + _vm._s(_vm.post.body) + "\n  ")
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card-footer" }, [
-        _vm.post.author
-          ? _c("span", [
-              _vm._v("\n      by " + _vm._s(_vm.post.author.name) + "\n  ")
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.post.answers_to_post
-          ? _c("span", [
+      _vm.post.answers_to_post
+        ? _c("div", { staticClass: "card-footer" }, [
+            _c("small", [
               _vm._v("\n      to "),
               _c(
                 "a",
@@ -48640,8 +48636,10 @@ var render = function() {
                 [_vm._v("post " + _vm._s(_vm.post.answers_to_post.id))]
               )
             ])
-          : _vm._e()
-      ])
+          ])
+        : _c("div", { staticClass: "card-footer" }, [
+            _c("small", [_vm._v("\n      the main post of the thread\n    ")])
+          ])
     ]
   )
 }

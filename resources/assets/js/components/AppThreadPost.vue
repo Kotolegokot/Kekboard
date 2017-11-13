@@ -3,13 +3,15 @@
     <div class="card-body">
       {{ post.body }}
     </div>
-    <div class="card-footer">
-      <span v-if="post.author">
-        by {{ post.author.name }}
-    </span>
-      <span v-if="post.answers_to_post">
+    <div v-if="post.answers_to_post" class="card-footer">
+      <small>
         to <a :href="'#post' + post.answers_to_post.id">post {{ post.answers_to_post.id }}</a>
-      </span>
+      </small>
+    </div>
+    <div v-else class="card-footer">
+      <small>
+        the main post of the thread
+      </small>
     </div>
   </div>
 </template>
