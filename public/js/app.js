@@ -23168,15 +23168,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_AppHeader_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_AppHeader_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_AppSidebar_vue__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_AppSidebar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_AppSidebar_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_AppSection_vue__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_AppSection_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_AppSection_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AppThread_vue__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_AppThread_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_AppThread_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__bootstrap__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__bootstrap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__bootstrap__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__plugins_KekboardAPI_js__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__bootstrap__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__bootstrap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__bootstrap__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__plugins_KekboardAPI_js__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__plugins_Pages_js__ = __webpack_require__(101);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -23192,38 +23187,12 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 
 
-
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_resource__["a" /* default */]);
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_10__plugins_KekboardAPI_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_7__plugins_KekboardAPI_js__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_8__plugins_Pages_js__["a" /* default */]);
 
 $(function () {
-  __WEBPACK_IMPORTED_MODULE_0_vue___default.a.pages = {
-    main: {
-      title: '',
-      url: '/',
-      component: __WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue___default.a
-    },
-    section: {
-      title: 'Section',
-      url: function url(options) {
-        return '/section/' + options.section.id;
-      },
-      component: __WEBPACK_IMPORTED_MODULE_7__components_AppSection_vue___default.a
-    },
-    thread: {
-      title: 'Thread',
-      url: function url(options) {
-        return '/thread/' + options.thread.id;
-      },
-      component: __WEBPACK_IMPORTED_MODULE_8__components_AppThread_vue___default.a
-    },
-    settings: {
-      title: 'Settings',
-      url: '/settings',
-      component: null
-    }
-  };
 
   var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     state: {
@@ -49227,6 +49196,53 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-544e5f56", module.exports)
   }
 }
+
+/***/ }),
+/* 101 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_AppMain_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_AppMain_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_AppMain_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_AppSection_vue__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_AppSection_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_AppSection_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_AppThread_vue__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_AppThread_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_AppThread_vue__);
+
+
+
+//import AppSettings from '../components/AppSettings.vue'
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  install: function install(Vue) {
+    Vue.pages = {
+      main: {
+        title: '',
+        url: '/',
+        component: __WEBPACK_IMPORTED_MODULE_0__components_AppMain_vue___default.a
+      },
+      section: {
+        title: 'Section',
+        url: function url(options) {
+          return '/section/' + options.section.id;
+        },
+        component: __WEBPACK_IMPORTED_MODULE_1__components_AppSection_vue___default.a
+      },
+      thread: {
+        title: 'Thread',
+        url: function url(options) {
+          return '/thread/' + options.thread.id;
+        },
+        component: __WEBPACK_IMPORTED_MODULE_2__components_AppThread_vue___default.a
+      },
+      settings: {
+        title: 'Settings',
+        url: '/settings',
+        component: null
+      }
+    };
+  }
+});
 
 /***/ })
 /******/ ]);

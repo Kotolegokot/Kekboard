@@ -4,39 +4,17 @@ import VueResource from 'vue-resource'
 import AppInterface from './components/AppInterface.vue'
 import AppHeader from './components/AppHeader.vue'
 import AppSidebar from './components/AppSidebar.vue'
-import AppMain from './components/AppMain.vue'
-import AppSection from './components/AppSection.vue'
-import AppThread from './components/AppThread.vue'
 import bootstrap from './bootstrap'
+
 import KekboardAPI from './plugins/KekboardAPI.js'
+import Pages from './plugins/Pages.js'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
 Vue.use(KekboardAPI)
+Vue.use(Pages)
 
 $(() => {
-  Vue.pages = {
-    main: {
-      title: '',
-      url: '/',
-      component: AppMain
-    },
-    section: {
-      title: 'Section',
-      url: options => '/section/' + options.section.id,
-      component: AppSection
-    },
-    thread: {
-      title: 'Thread',
-      url: options => '/thread/' + options.thread.id,
-      component: AppThread
-    },
-    settings: {
-      title: 'Settings',
-      url: '/settings',
-      component: null
-    }
-  }
 
   let store = new Vuex.Store({
     state: {
