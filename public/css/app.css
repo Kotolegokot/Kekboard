@@ -9191,11 +9191,3 @@ a.text-dark:hover {
   visibility: hidden !important;
 }
 
-div#content {
-  margin-top: 16px;
-}
-
-.btn {
-  cursor: pointer;
-}
-

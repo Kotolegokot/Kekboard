@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
+import AppInterface from './components/AppInterface.vue'
 import AppHeader from './components/AppHeader.vue'
+import AppSidebar from './components/AppSidebar.vue'
 import AppMain from './components/AppMain.vue'
 import AppSection from './components/AppSection.vue'
 import AppThread from './components/AppThread.vue'
@@ -71,7 +73,7 @@ $(() => {
   let vue = new Vue({
     el: "#app",
     components: {
-        AppHeader
+      AppInterface
     },
     store,
     computed: Vuex.mapGetters([

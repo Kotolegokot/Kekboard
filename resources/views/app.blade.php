@@ -14,11 +14,7 @@
 
     <body>
         <div id="app">
-            <app-header></app-header>
-
-            <div id="content" class="container">
-              <component :is="currentView"></component>
-            </div>
+          <app-interface />
         </div>
 
         <!-- JS -->
