@@ -40,12 +40,12 @@ export default {
   },
   computed: {
     ...mapState([
-      'thread'
+      'options'
     ])
   },
   methods: {
     createPost () {
-      Vue.requestCreateNewPost(this.thread.id, this.newPostBody, this.answers_to_post.id).then(response => {
+      Vue.requestCreateNewPost(this.options.thread.id, this.newPostBody, this.answers_to_post.id).then(response => {
         this.errors = []
         this.newPostBody = ''
         this.$emit('answered')

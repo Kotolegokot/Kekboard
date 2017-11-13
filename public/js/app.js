@@ -26410,12 +26410,12 @@ window.$ = __webpack_require__(7);
       required: true
     }
   },
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['thread'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['options'])),
   methods: {
     createPost: function createPost() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_1_vue___default.a.requestCreateNewPost(this.thread.id, this.newPostBody, this.answers_to_post.id).then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_1_vue___default.a.requestCreateNewPost(this.options.thread.id, this.newPostBody, this.answers_to_post.id).then(function (response) {
         _this.errors = [];
         _this.newPostBody = '';
         _this.$emit('answered');
