@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-body" id="new-post-form">
+  <div class="d-flex card card-body" id="new-post-form">
     <div v-if="errors.length" class="alert alert-danger">
       <ul id="errors">
         <li v-for="error in errors">
@@ -16,7 +16,7 @@
       </textarea>
     </div>
 
-    <a href="#" @click="createPost" class="btn btn-primary">Post</a>
+    <a href="#" @click="createPost" id="submit" class="ml-auto btn btn-primary">Post</a>
   </div>
 </template>
 
@@ -25,11 +25,17 @@ import { mapState } from 'vuex'
 window.$ = require('jquery')
 
 export default {
-  name: 'AppThreadNewPostForm',
+  name: 'AppThreadPostAnswerForm',
   data () {
     return {
       newPostBody: '',
       errors: []
+    }
+  },
+  props: {
+    answers_to_post: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -39,10 +45,10 @@ export default {
   },
   methods: {
     createPost () {
-      this.$root.requestCreateNewPost(this.thread.id, this.newPostBody).then(response => {
+      this.$root.requestCreateNewPost(this.thread.id, this.newPostBody, this.answers_to_post.id).then(response => {
         this.errors = []
         this.newPostBody = ''
-        this.$emit('created')
+        this.$emit('answered')
       }).catch(response => {
         this.errors = Object.values(response.body.errors).flatten()
       }).finally(response => {
@@ -57,12 +63,12 @@ export default {
 </script>
 
 <style scoped>
-#new-post-form {
-  width: 60%;
-}
-
 ul#errors {
   margin-bottom: 0;
   list-style-type: none;
+}
+
+a#submit {
+  width: 80px;
 }
 </style>

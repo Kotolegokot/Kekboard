@@ -1,35 +1,17 @@
 <template>
-  <div id="thread">
-    <p>
-      <a
-        class="btn btn-primary"
-        href="#"
-        @click="toggleNewPostForm">
-        New post
-      </a>
-    </p>
-
-    <p>
-      <app-thread-new-post-form
-        v-if="showNewPostForm"
-        @created="postCreated" />
-    </p>
-
-    <p>
-      <ul id="posts" class="list-group">
-        <p
-          v-for="post in posts"
-          :key="post.id">
-          <app-thread-post :post="post" />
-        </p>
-      </ul>
-    </p>
+  <div class="thread" :id="'thread' + thread.id">
+    <app-thread-post
+      class="post"
+      v-for="post in posts"
+      :key="post.id"
+      :post="post"
+      @answered="postCreated"
+      />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import AppThreadNewPostForm from './AppThreadNewPostForm.vue'
 import AppThreadPost from './AppThreadPost.vue'
 import Vue from 'vue'
 
@@ -47,7 +29,6 @@ export default {
     ])
   },
   components: {
-    AppThreadNewPostForm,
     AppThreadPost
   },
   methods: {
@@ -70,6 +51,8 @@ export default {
               posts[i].answers_to_post = response.body
             })
           }
+
+          posts[i].show_answer_form = false
         }
 
         this.posts = posts
@@ -89,4 +72,7 @@ export default {
 </script>
 
 <style scoped>
+.post {
+  margin-bottom: 16px;
+}
 </style>

@@ -88,9 +88,10 @@ $(() => {
 
       requestThreads: (sectionId) => Vue.http.get('/threads/' + sectionId),
 
-      requestCreateNewThread: (sectionId, name) => Vue.http.post('/threads/create', {
+      requestCreateNewThread: (sectionId, name, firstPostBody) => Vue.http.post('/threads/create', {
         section: sectionId,
-        name
+        name,
+        first_post_body: firstPostBody
       }, {
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -99,9 +100,10 @@ $(() => {
 
       requestPosts: (threadId) => Vue.http.get('/posts/' + threadId),
 
-      requestCreateNewPost: (threadId, body) => Vue.http.post('/posts/create', {
+      requestCreateNewPost: (threadId, body, answersToPostId) => Vue.http.post('/posts/create', {
         thread: threadId,
-        body
+        body,
+        answers_to_post: answersToPostId
       }, {
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

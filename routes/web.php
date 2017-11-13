@@ -44,7 +44,8 @@ Route::get('/threads/{section}', function (Request $request, App\Section $sectio
 Route::post('/threads/create', function (Request $request) {
   $request->validate([
     'name' => 'required|min:1|max:255|unique:threads,name',
-    'section' => 'required|exists:sections,id'
+    'section' => 'required|exists:sections,id',
+    'first_post_body' => 'required|min:1'
   ]);
 
   $section = App\Section::find($request->section);
@@ -54,6 +55,13 @@ Route::post('/threads/create', function (Request $request) {
   $thread->section_id = $section->id;
   $thread->author_id = Auth::id();
   $thread->save();
+
+  $post = new App\Post;
+  $post->body = $request->first_post_body;
+  $post->thread_id = $thread->id;
+  $post->answers_to_post_id = 0;
+  $post->author_id = Auth::id();
+  $post->save();
 
   return [];
 });

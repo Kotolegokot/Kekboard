@@ -12,8 +12,19 @@
       <input
         v-model.trim="newThreadName"
         @keyup.enter.stop="createThread"
-        type="text" class="form-control" id="thread-name" required />
+        type="text" class="form-control" id="thread-name" required>
+      </input>
       <small class="form-text text-muted">The name of the new thread</small>
+    </div>
+
+    <div class="form-group">
+      <textarea
+        v-model="firstPostBody"
+        rows="4"
+        class="form-control"
+        id="post-body" required>
+      </textarea>
+      <small class="form-text text-muted">The head post of the thread</small>
     </div>
 
     <a href="#" @click="createThread" class="btn btn-primary">Create</a>
@@ -29,6 +40,7 @@ export default {
   data () {
     return {
       newThreadName: '',
+      firstPostBody: '',
       errors: []
     }
   },
@@ -39,9 +51,10 @@ export default {
   },
   methods: {
     createThread () {
-      this.$root.requestCreateNewThread(this.section.id, this.newThreadName).then(response => {
+      this.$root.requestCreateNewThread(this.section.id, this.newThreadName, this.firstPostBody).then(response => {
         this.errors = []
         this.newThreadName = ''
+        this.firstPostBody = ''
         this.$emit('created')
       }).catch(response => {
         this.errors = Object.values(response.body.errors).flatten()

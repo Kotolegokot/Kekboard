@@ -13013,10 +13013,11 @@ $(function () {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/threads/' + sectionId);
       },
 
-      requestCreateNewThread: function requestCreateNewThread(sectionId, name) {
+      requestCreateNewThread: function requestCreateNewThread(sectionId, name, firstPostBody) {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post('/threads/create', {
           section: sectionId,
-          name: name
+          name: name,
+          first_post_body: firstPostBody
         }, {
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -13028,10 +13029,11 @@ $(function () {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get('/posts/' + threadId);
       },
 
-      requestCreateNewPost: function requestCreateNewPost(threadId, body) {
+      requestCreateNewPost: function requestCreateNewPost(threadId, body, answersToPostId) {
         return __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post('/posts/create', {
           thread: threadId,
-          body: body
+          body: body,
+          answers_to_post: answersToPostId
         }, {
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -47384,7 +47386,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.post[data-v-1958f552] {\n  margin-bottom: 16px;\n}\n", ""]);
 
 // exports
 
@@ -47396,12 +47398,10 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__AppThreadPost_vue__ = __webpack_require__(110);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__AppThreadPost_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__AppThreadPost_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__AppThreadPost_vue__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__AppThreadPost_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__AppThreadPost_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -47416,24 +47416,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
 
 
 
@@ -47450,8 +47432,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
   computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['thread'])),
   components: {
-    AppThreadNewPostForm: __WEBPACK_IMPORTED_MODULE_1__AppThreadNewPostForm_vue___default.a,
-    AppThreadPost: __WEBPACK_IMPORTED_MODULE_2__AppThreadPost_vue___default.a
+    AppThreadPost: __WEBPACK_IMPORTED_MODULE_1__AppThreadPost_vue___default.a
   },
   methods: {
     toggleNewPostForm: function toggleNewPostForm() {
@@ -47475,6 +47456,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
               posts[i].answers_to_post = response.body;
             });
           }
+
+          posts[i].show_answer_form = false;
         };
 
         for (var i = 0; i < posts.length; i++) {
@@ -47504,44 +47487,18 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "thread" } }, [
-    _c("p", [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-primary",
-          attrs: { href: "#" },
-          on: { click: _vm.toggleNewPostForm }
-        },
-        [_vm._v("\n      New post\n    ")]
-      )
-    ]),
-    _vm._v(" "),
-    _c(
-      "p",
-      [
-        _vm.showNewPostForm
-          ? _c("app-thread-new-post-form", { on: { created: _vm.postCreated } })
-          : _vm._e()
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c("p", [
-      _c(
-        "ul",
-        { staticClass: "list-group", attrs: { id: "posts" } },
-        _vm._l(_vm.posts, function(post) {
-          return _c(
-            "p",
-            { key: post.id },
-            [_c("app-thread-post", { attrs: { post: post } })],
-            1
-          )
-        })
-      )
-    ])
-  ])
+  return _c(
+    "div",
+    { staticClass: "thread", attrs: { id: "thread" + _vm.thread.id } },
+    _vm._l(_vm.posts, function(post) {
+      return _c("app-thread-post", {
+        key: post.id,
+        staticClass: "post",
+        attrs: { post: post },
+        on: { answered: _vm.postCreated }
+      })
+    })
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -47554,250 +47511,11 @@ if (false) {
 }
 
 /***/ }),
-/* 90 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(91)
-}
-var normalizeComponent = __webpack_require__(2)
-/* script */
-var __vue_script__ = __webpack_require__(93)
-/* template */
-var __vue_template__ = __webpack_require__(94)
-/* template functional */
-  var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = "data-v-a7aff67c"
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/AppThreadNewPostForm.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-a7aff67c", Component.options)
-  } else {
-    hotAPI.reload("data-v-a7aff67c", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 91 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(92);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(5)("6abee2f2", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a7aff67c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./AppThreadNewPostForm.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a7aff67c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./AppThreadNewPostForm.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 92 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(4)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\n#new-post-form[data-v-a7aff67c] {\n  width: 60%;\n}\nul#errors[data-v-a7aff67c] {\n  margin-bottom: 0;\n  list-style-type: none;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 93 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(1);
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-window.$ = __webpack_require__(42);
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'AppThreadNewPostForm',
-  data: function data() {
-    return {
-      newPostBody: '',
-      errors: []
-    };
-  },
-
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['thread'])),
-  methods: {
-    createPost: function createPost() {
-      var _this = this;
-
-      this.$root.requestCreateNewPost(this.thread.id, this.newPostBody).then(function (response) {
-        _this.errors = [];
-        _this.newPostBody = '';
-        _this.$emit('created');
-      }).catch(function (response) {
-        _this.errors = Object.values(response.body.errors).flatten();
-      }).finally(function (response) {
-        $("textarea#post-body").focus();
-      });
-    }
-  },
-  mounted: function mounted() {
-    $("textarea#post-body").focus();
-  }
-});
-
-/***/ }),
-/* 94 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "card card-body", attrs: { id: "new-post-form" } },
-    [
-      _vm.errors.length
-        ? _c("div", { staticClass: "alert alert-danger" }, [
-            _c(
-              "ul",
-              { attrs: { id: "errors" } },
-              _vm._l(_vm.errors, function(error) {
-                return _c("li", [
-                  _vm._v("\n        " + _vm._s(error) + "\n      ")
-                ])
-              })
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("textarea", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.newPostBody,
-              expression: "newPostBody"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: {
-            rows: "4",
-            placeholder: "Type your message here",
-            id: "post-body",
-            required: ""
-          },
-          domProps: { value: _vm.newPostBody },
-          on: {
-            keyup: function($event) {
-              if (
-                !("button" in $event) &&
-                _vm._k($event.keyCode, "enter", 13, $event.key)
-              ) {
-                return null
-              }
-              $event.stopPropagation()
-              _vm.createPost($event)
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.newPostBody = $event.target.value
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-primary",
-          attrs: { href: "#" },
-          on: { click: _vm.createPost }
-        },
-        [_vm._v("Post")]
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-a7aff67c", module.exports)
-  }
-}
-
-/***/ }),
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
 /* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -48287,6 +48005,17 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 window.$ = __webpack_require__(42);
@@ -48296,6 +48025,7 @@ window.$ = __webpack_require__(42);
   data: function data() {
     return {
       newThreadName: '',
+      firstPostBody: '',
       errors: []
     };
   },
@@ -48305,9 +48035,10 @@ window.$ = __webpack_require__(42);
     createThread: function createThread() {
       var _this = this;
 
-      this.$root.requestCreateNewThread(this.section.id, this.newThreadName).then(function (response) {
+      this.$root.requestCreateNewThread(this.section.id, this.newThreadName, this.firstPostBody).then(function (response) {
         _this.errors = [];
         _this.newThreadName = '';
+        _this.firstPostBody = '';
         _this.$emit('created');
       }).catch(function (response) {
         _this.errors = Object.values(response.body.errors).flatten();
@@ -48386,6 +48117,34 @@ var render = function() {
         _vm._v(" "),
         _c("small", { staticClass: "form-text text-muted" }, [
           _vm._v("The name of the new thread")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("textarea", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.firstPostBody,
+              expression: "firstPostBody"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { rows: "4", id: "post-body", required: "" },
+          domProps: { value: _vm.firstPostBody },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.firstPostBody = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("small", { staticClass: "form-text text-muted" }, [
+          _vm._v("The head post of the thread")
         ])
       ]),
       _vm._v(" "),
@@ -48570,7 +48329,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -48581,6 +48340,26 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AppThreadPostAnswerForm__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AppThreadPostAnswerForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__AppThreadPostAnswerForm__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -48600,6 +48379,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AppThreadPost',
   props: {
@@ -48607,6 +48388,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       type: Object,
       required: true
     }
+  },
+  components: {
+    AppThreadPostAnswerForm: __WEBPACK_IMPORTED_MODULE_0__AppThreadPostAnswerForm___default.a
   }
 });
 
@@ -48626,21 +48410,54 @@ var render = function() {
         _vm._v("\n    " + _vm._s(_vm.post.body) + "\n  ")
       ]),
       _vm._v(" "),
-      _vm.post.answers_to_post
-        ? _c("div", { staticClass: "card-footer" }, [
-            _c("small", [
-              _vm._v("\n      to "),
-              _c(
-                "a",
-                { attrs: { href: "#post" + _vm.post.answers_to_post.id } },
-                [_vm._v("post " + _vm._s(_vm.post.answers_to_post.id))]
-              )
-            ])
+      _c("div", { staticClass: "d-flex card-footer" }, [
+        _c("small", [
+          _c("a", { attrs: { href: "#post" + _vm.post.id } }, [
+            _vm._v("\n        #" + _vm._s(_vm.post.id) + "\n      ")
+          ]),
+          _vm._v(" "),
+          _vm.post.answers_to_post
+            ? _c("span", [
+                _vm._v("\n        -----> "),
+                _c(
+                  "a",
+                  { attrs: { href: "#post" + _vm.post.answers_to_post.id } },
+                  [_vm._v("#" + _vm._s(_vm.post.answers_to_post.id))]
+                )
+              ])
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "ml-auto" }, [
+          _c("small", [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    _vm.post.show_answer_form = !_vm.post.show_answer_form
+                  }
+                }
+              },
+              [_vm._v("\n          answer\n        ")]
+            )
           ])
-        : _c("div", { staticClass: "card-footer" }, [
-            _c("small", [_vm._v("\n      the main post of the thread\n    ")])
-          ])
-    ]
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.post.show_answer_form
+        ? _c("app-thread-post-answer-form", {
+            attrs: { answers_to_post: _vm.post },
+            on: {
+              answered: function($event) {
+                this.$emit("answered")
+              }
+            }
+          })
+        : _vm._e()
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -48650,6 +48467,256 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-f51295dc", module.exports)
+  }
+}
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(116)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(118)
+/* template */
+var __vue_template__ = __webpack_require__(119)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-13f44154"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/AppThreadPostAnswerForm.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-13f44154", Component.options)
+  } else {
+    hotAPI.reload("data-v-13f44154", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(117);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(5)("29c6445c", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-13f44154\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./AppThreadPostAnswerForm.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-13f44154\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./AppThreadPostAnswerForm.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 117 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\nul#errors[data-v-13f44154] {\n  margin-bottom: 0;\n  list-style-type: none;\n}\na#submit[data-v-13f44154] {\n  width: 80px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 118 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(1);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+window.$ = __webpack_require__(42);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'AppThreadPostAnswerForm',
+  data: function data() {
+    return {
+      newPostBody: '',
+      errors: []
+    };
+  },
+
+  props: {
+    answers_to_post: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])(['thread'])),
+  methods: {
+    createPost: function createPost() {
+      var _this = this;
+
+      this.$root.requestCreateNewPost(this.thread.id, this.newPostBody, this.answers_to_post.id).then(function (response) {
+        _this.errors = [];
+        _this.newPostBody = '';
+        _this.$emit('answered');
+      }).catch(function (response) {
+        _this.errors = Object.values(response.body.errors).flatten();
+      }).finally(function (response) {
+        $("textarea#post-body").focus();
+      });
+    }
+  },
+  mounted: function mounted() {
+    $("textarea#post-body").focus();
+  }
+});
+
+/***/ }),
+/* 119 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "d-flex card card-body", attrs: { id: "new-post-form" } },
+    [
+      _vm.errors.length
+        ? _c("div", { staticClass: "alert alert-danger" }, [
+            _c(
+              "ul",
+              { attrs: { id: "errors" } },
+              _vm._l(_vm.errors, function(error) {
+                return _c("li", [
+                  _vm._v("\n        " + _vm._s(error) + "\n      ")
+                ])
+              })
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("textarea", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.newPostBody,
+              expression: "newPostBody"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            rows: "4",
+            placeholder: "Type your message here",
+            id: "post-body",
+            required: ""
+          },
+          domProps: { value: _vm.newPostBody },
+          on: {
+            keyup: function($event) {
+              if (
+                !("button" in $event) &&
+                _vm._k($event.keyCode, "enter", 13, $event.key)
+              ) {
+                return null
+              }
+              $event.stopPropagation()
+              _vm.createPost($event)
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.newPostBody = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          staticClass: "ml-auto btn btn-primary",
+          attrs: { href: "#", id: "submit" },
+          on: { click: _vm.createPost }
+        },
+        [_vm._v("Post")]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-13f44154", module.exports)
   }
 }
 
