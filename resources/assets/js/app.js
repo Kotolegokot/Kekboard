@@ -6,9 +6,11 @@ import AppMain from './components/AppMain.vue'
 import AppSection from './components/AppSection.vue'
 import AppThread from './components/AppThread.vue'
 import bootstrap from './bootstrap'
+import KekboardAPI from './plugins/KekboardAPI.js'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
+Vue.use(KekboardAPI)
 
 const defaultPage = 'sections'
 
@@ -77,39 +79,6 @@ $(() => {
       'currentView',
       'title'
     ]),
-    methods: {
-      requestCurrentUser: () => Vue.http.get('/user'),
-
-      requestUser: (userId) => Vue.http.get('/user/' + userId),
-
-      requestPost: (postId) => Vue.http.get('/post/' + postId),
-
-      requestSections: () => Vue.http.get('/sections'),
-
-      requestThreads: (sectionId) => Vue.http.get('/threads/' + sectionId),
-
-      requestCreateNewThread: (sectionId, name, firstPostBody) => Vue.http.post('/threads/create', {
-        section: sectionId,
-        name,
-        first_post_body: firstPostBody
-      }, {
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      }),
-
-      requestPosts: (threadId) => Vue.http.get('/posts/' + threadId),
-
-      requestCreateNewPost: (threadId, body, answersToPostId) => Vue.http.post('/posts/create', {
-        thread: threadId,
-        body,
-        answers_to_post: answersToPostId
-      }, {
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      })
-    },
     mounted () {
       $(document).attr('title', this.title)
     }

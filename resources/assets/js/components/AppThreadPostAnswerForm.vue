@@ -11,7 +11,6 @@
     <div class="form-group">
       <textarea
         v-model="newPostBody"
-        @keyup.enter.stop="createPost"
         rows="4" placeholder="Type your message here" class="form-control" id="post-body" required>
       </textarea>
     </div>
@@ -22,6 +21,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import Vue from 'vue'
 window.$ = require('jquery')
 
 export default {
@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     createPost () {
-      this.$root.requestCreateNewPost(this.thread.id, this.newPostBody, this.answers_to_post.id).then(response => {
+      Vue.requestCreateNewPost(this.thread.id, this.newPostBody, this.answers_to_post.id).then(response => {
         this.errors = []
         this.newPostBody = ''
         this.$emit('answered')

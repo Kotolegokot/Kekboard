@@ -36,18 +36,18 @@ export default {
       this.showNewPostForm = !this.showNewPostForm
     },
     updatePosts () {
-      this.$root.requestPosts(this.thread.id).then(response => {
+      Vue.requestPosts(this.thread.id).then(response => {
         let posts = response.body
 
         for (let i = 0; i < posts.length; i++) {
           posts[i].author = null
-          this.$root.requestUser(posts[i].author_id).then(response => {
+          Vue.requestUser(posts[i].author_id).then(response => {
             posts[i].author = response.body
           })
 
           posts[i].answers_to_post = null
           if(posts[i].answers_to_post_id != 0) {
-            this.$root.requestPost(posts[i].answers_to_post_id).then(response => {
+            Vue.requestPost(posts[i].answers_to_post_id).then(response => {
               posts[i].answers_to_post = response.body
             })
           }

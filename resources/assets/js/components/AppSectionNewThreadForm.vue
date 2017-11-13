@@ -33,6 +33,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import Vue from 'vue'
 window.$ = require('jquery')
 
 export default {
@@ -51,7 +52,7 @@ export default {
   },
   methods: {
     createThread () {
-      this.$root.requestCreateNewThread(this.section.id, this.newThreadName, this.firstPostBody).then(response => {
+      Vue.requestCreateNewThread(this.section.id, this.newThreadName, this.firstPostBody).then(response => {
         this.errors = []
         this.newThreadName = ''
         this.firstPostBody = ''

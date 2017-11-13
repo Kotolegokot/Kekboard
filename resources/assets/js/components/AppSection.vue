@@ -60,11 +60,11 @@ export default {
       this.showNewThreadForm = !this.showNewThreadForm
     },
     updateThreads () {
-      this.$root.requestThreads(this.section.id).then(response => {
+      Vue.requestThreads(this.section.id).then(response => {
         let threads = response.body
 
         for (let i = 0; i < threads.length; i++) {
-          this.$root.requestUser(threads[i].author_id).then(response => {
+          Vue.requestUser(threads[i].author_id).then(response => {
             this.$set(threads[i], 'author', response.body)
           })
         }

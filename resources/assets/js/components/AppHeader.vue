@@ -19,6 +19,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
+import Vue from 'vue'
 
 export default {
   name: 'AppHeader',
@@ -38,7 +39,7 @@ export default {
     ])
   },
   mounted () {
-    this.$root.requestCurrentUser().then(response => { this.user = response.body })
+    Vue.requestCurrentUser().then(response => { this.user = response.body })
   }
 }
 </script>

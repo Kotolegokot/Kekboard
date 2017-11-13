@@ -10,6 +10,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import Vue from 'vue'
 
 export default {
   name: 'AppMain',
@@ -24,7 +25,7 @@ export default {
     ])
   },
   mounted () {
-    this.$root.requestSections().then(response => { this.sections = response.body })
+    Vue.requestSections().then(response => { this.sections = response.body })
   }
 }
 </script>

@@ -18,7 +18,7 @@
         <small>
           <a
             href="#"
-            @click="post.show_answer_form = !post.show_answer_form"
+            @click="toggleAnswerForm"
             >
             answer
           </a>
@@ -29,7 +29,7 @@
     <app-thread-post-answer-form
       v-if="post.show_answer_form"
       :answers_to_post="post"
-      @answered="this.$emit('answered')"
+      @answered="postCreated"
       />
   </div>
 </template>
@@ -44,6 +44,15 @@ export default {
       type: Object,
       required: true
     },
+  },
+  methods: {
+    toggleAnswerForm () {
+      this.post.show_answer_form = !this.post.show_answer_form
+    },
+    postCreated () {
+      this.toggleAnswerForm()
+      this.$emit('answered')
+    }
   },
   components: {
     AppThreadPostAnswerForm

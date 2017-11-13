@@ -37,7 +37,7 @@ Route::get('/sections', function (Request $request) {
   return Auth::check() ? App\Section::all() : abort(406);
 });
 
-Route::get('/threads/{section}', function (Request $request, App\Section $section) {
+Route::get('/section/{section}/threads', function (Request $request, App\Section $section) {
   if (Auth::guest()) {
     return abort(406);
   }
@@ -55,14 +55,11 @@ Route::get('/threads/{section}', function (Request $request, App\Section $sectio
   return $threads;
 });
 
-Route::post('/threads/create', function (Request $request) {
+Route::post('/section/{section}/threads/create', function (Request $request, App\Section $section) {
   $request->validate([
     'name' => 'required|min:1|max:255|unique:threads,name',
-    'section' => 'required|exists:sections,id',
     'first_post_body' => 'required|min:1'
   ]);
-
-  $section = App\Section::find($request->section);
 
   $thread = new App\Thread;
   $thread->name = $request->name;
@@ -80,7 +77,7 @@ Route::post('/threads/create', function (Request $request) {
   return [];
 });
 
-Route::get('/posts/{thread}', function (Request $request, App\Thread $thread) {
+Route::get('/thread/{thread}/posts', function (Request $request, App\Thread $thread) {
   if (Auth::guest()) {
     return abort(406);
   }
@@ -98,13 +95,10 @@ Route::get('/posts/{thread}', function (Request $request, App\Thread $thread) {
   return $posts;
 });
 
-Route::post('/posts/create', function (Request $request) {
+Route::post('/thread/{thread}/posts/create', function (Request $request, App\Thread $thread) {
   $request->validate([
-    'body' => 'required|min:1',
-    'thread' => 'required|exists:threads,id'
+    'body' => 'required|min:1'
   ]);
-
-  $thread = App\Thread::find($request->thread);
 
   if (!$request->answers_to_post) {
     $request->answers_to_post = 0;
