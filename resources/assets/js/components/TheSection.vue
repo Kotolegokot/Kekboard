@@ -9,8 +9,8 @@
     </p>
 
     <p>
-      <app-section-new-thread-form
-        v-if="showNewThreadForm"
+      <the-section-form-new-thread
+        v-show="showNewThreadForm"
         @created="threadCreated" />
     </p>
 
@@ -44,7 +44,6 @@ export default {
   },
   computed: {
     ...mapState([
-      'page',
       'options'
     ])
   },
@@ -55,22 +54,23 @@ export default {
     ...mapMutations([
       'go'
     ]),
+
     toggleNewThreadForm () {
       this.showNewThreadForm = !this.showNewThreadForm
     },
-    updateThreads () {
-      Vue.requestThreads(this.options.section.id).then(response => {
-        let threads = response.body
 
+    updateThreads () {
+      Vue.requestThreads(this.options.section.id).then(threads => {
         for (let i = 0; i < threads.length; i++) {
-          Vue.requestUser(threads[i].author_id).then(response => {
-            this.$set(threads[i], 'author', response.body)
+          Vue.requestUser(threads[i].author_id).then(user => {
+            this.$set(threads[i], 'author', user)
           })
         }
 
         this.threads = threads
       })
     },
+
     threadCreated () {
       this.updateThreads()
       this.toggleNewThreadForm()

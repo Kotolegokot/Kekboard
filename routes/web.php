@@ -74,7 +74,7 @@ Route::post('/section/{section}/threads/create', function (Request $request, App
   $post->author_id = Auth::id();
   $post->save();
 
-  return [];
+  return [ 'status' => 200 ];
 });
 
 Route::get('/thread/{thread}/posts', function (Request $request, App\Thread $thread) {
@@ -111,5 +111,5 @@ Route::post('/thread/{thread}/posts/create', function (Request $request, App\Thr
   $post->author_id = Auth::id();
   $post->save();
 
-  return [];
+  return [ 'status' => 200 ];
 });

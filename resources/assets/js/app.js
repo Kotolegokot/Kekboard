@@ -15,7 +15,6 @@ Vue.use(KekboardAPI)
 Vue.use(Pages)
 
 $(() => {
-
   let store = new Vuex.Store({
     state: {
       appName: 'Kekboard',
@@ -27,7 +26,7 @@ $(() => {
       sections: []
     },
     mutations: {
-      go(state, { page, pushState = true, ...options }) {
+      go (state, { page, pushState = true, ...options }) {
         state.page = page
         state.pageTitle = typeof Vue.pages[page].title == 'function' ? Vue.pages[page].title(options) : Vue.pages[page].title
         state.pageUrl = typeof Vue.pages[page].url == 'function' ? Vue.pages[page].url(options) : Vue.pages[page].url
@@ -37,8 +36,13 @@ $(() => {
           window.history.pushState({ page, ...options }, this.title, state.pageUrl)
         }
       },
+    },
+    actions: {
+      jump (context, id) {
+        document.getElementById(id).scrollIntoView()
+      },
 
-      logout () {
+      logout (context) {
         window.location.href = '/logout'
       }
     },

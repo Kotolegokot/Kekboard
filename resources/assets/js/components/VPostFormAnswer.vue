@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex card card-body" id="new-post-form">
+  <div class="card card-body">
     <div v-if="errors.length" class="alert alert-danger">
       <ul id="errors">
         <li v-for="error in errors">
@@ -15,7 +15,7 @@
       </textarea>
     </div>
 
-    <span @click="createPost" id="submit" class="ml-auto link btn btn-primary">Post</span>
+    <span @click="createPost" id="submit" class="link btn btn-primary">Post</span>
   </div>
 </template>
 
@@ -44,20 +44,24 @@ export default {
     ])
   },
   methods: {
+    focus () {
+      $("textarea#post-body").focus() // TODO: use Vue.js' ref
+    },
+
     createPost () {
       Vue.requestCreateNewPost(this.options.thread.id, this.newPostBody, this.answers_to_post.id).then(response => {
         this.errors = []
         this.newPostBody = ''
         this.$emit('answered')
-      }).catch(response => {
-        this.errors = Object.values(response.body.errors).flatten()
-      }).finally(response => {
-        $("textarea#post-body").focus()
+      }).catch(errors => {
+        this.errors = errors
       })
+
+      this.focus()
     }
   },
   mounted () {
-    $("textarea#post-body").focus()
+    this.focus()
   }
 }
 </script>
@@ -66,9 +70,5 @@ export default {
 ul#errors {
   margin-bottom: 0;
   list-style-type: none;
-}
-
-a#submit {
-  width: 80px;
 }
 </style>

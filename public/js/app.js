@@ -10949,10 +10949,10 @@ module.exports = Vue$3;
 "use strict";
 /* unused harmony export Store */
 /* unused harmony export install */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return mapState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapMutations; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapGetters; });
-/* unused harmony export mapActions */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return mapState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return mapMutations; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapGetters; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapActions; });
 /* unused harmony export createNamespacedHelpers */
 /**
  * vuex v3.0.1
@@ -23193,7 +23193,6 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_7__plu
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_8__plugins_Pages_js__["a" /* default */]);
 
 $(function () {
-
   var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     state: {
       appName: 'Kekboard',
@@ -23219,8 +23218,13 @@ $(function () {
         if (pushState) {
           window.history.pushState(_extends({ page: page }, options), this.title, state.pageUrl);
         }
+      }
+    },
+    actions: {
+      jump: function jump(context, id) {
+        document.getElementById(id).scrollIntoView();
       },
-      logout: function logout() {
+      logout: function logout(context) {
         window.location.href = '/logout';
       }
     },
@@ -47000,33 +47004,80 @@ window.$ = __webpack_require__(6);
     var _this = this;
 
     Vue.requestCurrentUser = function () {
-      return Vue.http.get('/user');
+      return new Promise(function (resolve, reject) {
+        Vue.http.get('/user').then(function (response) {
+          var user = response.body;
+          resolve(user);
+        }).catch(function (response) {
+          reject(response);
+        });
+      });
     };
 
     Vue.requestUser = function (userId) {
-      return Vue.http.get('/user/' + userId);
+      return new Promise(function (resolve, reject) {
+        Vue.http.get('/user/' + userId).then(function (response) {
+          var user = response.body;
+          resolve(user);
+        }).catch(function (response) {
+          reject(response);
+        });
+      });
     };
 
     Vue.requestPost = function (postId) {
-      return Vue.http.get('/post/' + postId);
+      return new Promise(function (resolve, reject) {
+        Vue.http.get('/post/' + postId).then(function (response) {
+          var post = response.body;
+          resolve(post);
+        }).catch(function (response) {
+          reject(response);
+        });
+      });
     };
 
     Vue.requestSections = function () {
-      return Vue.http.get('/sections');
+      return new Promise(function (resolve, reject) {
+        Vue.http.get('/sections').then(function (response) {
+          var sections = response.body;
+          resolve(sections);
+        }).catch(function (response) {
+          reject(response);
+        });
+      });
     };
 
     Vue.requestThreads = function (sectionId) {
-      return Vue.http.get('/section/' + sectionId + '/threads');
+      return new Promise(function (resolve, reject) {
+        Vue.http.get('/section/' + sectionId + '/threads').then(function (response) {
+          var threads = response.body;
+          threads.map(function (thread) {
+            Vue.requestUser(thread.author_id).then(function (user) {
+              Vue.set(thread, 'author', user);
+            });
+          });
+
+          resolve(threads);
+        }).catch(function (response) {
+          reject(response);
+        });
+      });
     };
 
     Vue.requestCreateNewThread = function (sectionId, name, firstPostBody) {
-      return Vue.http.post('/section/' + sectionId + '/threads/create', {
-        name: name,
-        first_post_body: firstPostBody
-      }, {
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+      return new Promise(function (resolve, reject) {
+        Vue.http.post('/section/' + sectionId + '/threads/create', {
+          name: name,
+          first_post_body: firstPostBody
+        }, {
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        }).then(function (response) {
+          resolve(response);
+        }).catch(function (response) {
+          reject(Object.values(response.body.errors).flatten());
+        });
       });
     };
 
@@ -47034,41 +47085,41 @@ window.$ = __webpack_require__(6);
       return new Promise(function (resolve, reject) {
         Vue.http.get('/thread/' + threadId + '/posts').then(function (response) {
           var posts = response.body;
+          posts.map(function (post) {
+            Vue.set(post, 'answers_to_post', null);
 
-          var _loop = function _loop(i) {
-            posts[i].answers_to_post = {};
-            if (posts[i].answers_to_post_id != 0) {
-              Vue.requestPost(posts[i].answers_to_post_id).then(function (response) {
-                posts[i].answers_to_post = response.body;
+            if (post.answers_to_post_id !== 0) {
+              Vue.requestPost(post.answers_to_post_id).then(function (answers_to_post) {
+                Vue.set(post, 'answers_to_post', answers_to_post);
               });
             }
 
-            posts[i].show_answer_form = false;
+            Vue.set(post, 'isMain', function () {
+              return _this.answers_to_post === 0;
+            }.bind(post));
+          });
 
-            posts[i].isMain = function () {
-              return _this.answers_to_post === {};
-            }.bind(posts[i]);
-          };
-
-          for (var i = 0; i < posts.length; i++) {
-            _loop(i);
-          }
-
-          return resolve(posts);
+          resolve(posts);
         }).catch(function (response) {
-          reject(response.statusText);
+          reject(response);
         });
       });
     };
 
     Vue.requestCreateNewPost = function (threadId, body, answersToPostId) {
-      return Vue.http.post('/thread/' + threadId + '/posts/create', {
-        body: body,
-        answers_to_post: answersToPostId
-      }, {
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+      return new Promise(function (resolve, reject) {
+        Vue.http.post('/thread/' + threadId + '/posts/create', {
+          body: body,
+          answers_to_post: answersToPostId
+        }, {
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        }).then(function (response) {
+          resolve(response);
+        }).catch(function (response) {
+          reject(Object.values(response.body.errors).flatten());
+        });
       });
     };
   }
@@ -47326,7 +47377,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['currentView'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapGetters */])(['currentView'])),
   methods: {
     toggleSidebar: function toggleSidebar() {
       this.sidebarShown = !this.sidebarShown;
@@ -47846,13 +47897,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["d" /* mapState */])(['appName'])),
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["c" /* mapMutations */])(['go'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["e" /* mapState */])(['appName'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["d" /* mapMutations */])(['go'])),
   mounted: function mounted() {
     var _this = this;
 
-    __WEBPACK_IMPORTED_MODULE_0_vue___default.a.requestSections().then(function (response) {
-      _this.sections = response.body;
+    __WEBPACK_IMPORTED_MODULE_0_vue___default.a.requestSections().then(function (sections) {
+      _this.sections = sections;
     });
   }
 });
@@ -48072,12 +48123,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['go'])),
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapMutations */])(['go'])),
   mounted: function mounted() {
     var _this = this;
 
-    __WEBPACK_IMPORTED_MODULE_1_vue___default.a.requestSections().then(function (response) {
-      _this.sections = response.body;
+    __WEBPACK_IMPORTED_MODULE_1_vue___default.a.requestSections().then(function (sections) {
+      _this.sections = sections;
     });
   }
 });
@@ -48270,23 +48321,21 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['page', 'options'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["e" /* mapState */])(['options'])),
   components: {
     TheSectionFormNewThread: __WEBPACK_IMPORTED_MODULE_1__TheSectionFormNewThread_vue___default.a
   },
-  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['go']), {
+  methods: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapMutations */])(['go']), {
     toggleNewThreadForm: function toggleNewThreadForm() {
       this.showNewThreadForm = !this.showNewThreadForm;
     },
     updateThreads: function updateThreads() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestThreads(this.options.section.id).then(function (response) {
-        var threads = response.body;
-
+      __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestThreads(this.options.section.id).then(function (threads) {
         var _loop = function _loop(i) {
-          __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestUser(threads[i].author_id).then(function (response) {
-            _this.$set(threads[i], 'author', response.body);
+          __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestUser(threads[i].author_id).then(function (user) {
+            _this.$set(threads[i], 'author', user);
           });
         };
 
@@ -48396,7 +48445,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n#new-thread-form[data-v-62cd42ce] {\n  width: 40%;\n}\nul#errors[data-v-62cd42ce] {\n  margin-bottom: 0;\n  list-style-type: none;\n}\n", ""]);
+exports.push([module.i, "\nul#errors[data-v-62cd42ce] {\n  margin-bottom: 0;\n  list-style-type: none;\n}\n", ""]);
 
 // exports
 
@@ -48460,25 +48509,28 @@ window.$ = __webpack_require__(6);
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['section'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["e" /* mapState */])(['options'])),
   methods: {
+    focus: function focus() {
+      $("input#thread-name").focus(); // TODO: use Vue.js' ref
+    },
     createThread: function createThread() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_1_vue___default.a.requestCreateNewThread(this.section.id, this.newThreadName, this.firstPostBody).then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_1_vue___default.a.requestCreateNewThread(this.options.section.id, this.newThreadName, this.firstPostBody).then(function (response) {
         _this.errors = [];
         _this.newThreadName = '';
         _this.firstPostBody = '';
         _this.$emit('created');
-      }).catch(function (response) {
-        _this.errors = Object.values(response.body.errors).flatten();
-      }).finally(function (response) {
-        $("input#thread-name").focus();
+      }).catch(function (errors) {
+        _this.errors = errors;
       });
+
+      this.focus();
     }
   },
   mounted: function mounted() {
-    $("input#thread-name").focus();
+    this.focus();
   }
 });
 
@@ -48490,104 +48542,97 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "card card-body", attrs: { id: "new-thread-form" } },
-    [
-      _vm.errors.length
-        ? _c("div", { staticClass: "alert alert-danger" }, [
-            _c(
-              "ul",
-              { attrs: { id: "errors" } },
-              _vm._l(_vm.errors, function(error) {
-                return _c("li", [
-                  _vm._v("\n        " + _vm._s(error) + "\n      ")
-                ])
-              })
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model.trim",
-              value: _vm.newThreadName,
-              expression: "newThreadName",
-              modifiers: { trim: true }
-            }
-          ],
-          staticClass: "form-control",
-          attrs: { type: "text", id: "thread-name", required: "" },
-          domProps: { value: _vm.newThreadName },
-          on: {
-            keyup: function($event) {
-              if (
-                !("button" in $event) &&
-                _vm._k($event.keyCode, "enter", 13, $event.key)
-              ) {
-                return null
-              }
-              $event.stopPropagation()
-              _vm.createThread($event)
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.newThreadName = $event.target.value.trim()
-            },
-            blur: function($event) {
-              _vm.$forceUpdate()
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("small", { staticClass: "form-text text-muted" }, [
-          _vm._v("The name of the new thread")
+  return _c("div", { staticClass: "card card-body" }, [
+    _vm.errors.length
+      ? _c("div", { staticClass: "alert alert-danger" }, [
+          _c(
+            "ul",
+            { attrs: { id: "errors" } },
+            _vm._l(_vm.errors, function(error) {
+              return _c("li", [
+                _vm._v("\n        " + _vm._s(error) + "\n      ")
+              ])
+            })
+          )
         ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("textarea", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.firstPostBody,
-              expression: "firstPostBody"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: { rows: "4", id: "post-body", required: "" },
-          domProps: { value: _vm.firstPostBody },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.firstPostBody = $event.target.value
-            }
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model.trim",
+            value: _vm.newThreadName,
+            expression: "newThreadName",
+            modifiers: { trim: true }
           }
-        }),
-        _vm._v(" "),
-        _c("small", { staticClass: "form-text text-muted" }, [
-          _vm._v("The head post of the thread")
-        ])
-      ]),
+        ],
+        staticClass: "form-control",
+        attrs: { type: "text", id: "thread-name", required: "" },
+        domProps: { value: _vm.newThreadName },
+        on: {
+          keyup: function($event) {
+            if (
+              !("button" in $event) &&
+              _vm._k($event.keyCode, "enter", 13, $event.key)
+            ) {
+              return null
+            }
+            $event.stopPropagation()
+            _vm.createThread($event)
+          },
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.newThreadName = $event.target.value.trim()
+          },
+          blur: function($event) {
+            _vm.$forceUpdate()
+          }
+        }
+      }),
       _vm._v(" "),
-      _c(
-        "span",
-        {
-          staticClass: "link btn btn-primary",
-          on: { click: _vm.createThread }
-        },
-        [_vm._v("Create")]
-      )
-    ]
-  )
+      _c("small", { staticClass: "form-text text-muted" }, [
+        _vm._v("The name of the new thread")
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("textarea", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.firstPostBody,
+            expression: "firstPostBody"
+          }
+        ],
+        staticClass: "form-control",
+        attrs: { rows: "4", id: "post-body", required: "" },
+        domProps: { value: _vm.firstPostBody },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.firstPostBody = $event.target.value
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("small", { staticClass: "form-text text-muted" }, [
+        _vm._v("The head post of the thread")
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "span",
+      { staticClass: "link btn btn-primary", on: { click: _vm.createThread } },
+      [_vm._v("Create")]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -48622,11 +48667,17 @@ var render = function() {
     _c(
       "p",
       [
-        _vm.showNewThreadForm
-          ? _c("app-section-new-thread-form", {
-              on: { created: _vm.threadCreated }
-            })
-          : _vm._e()
+        _c("the-section-form-new-thread", {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showNewThreadForm,
+              expression: "showNewThreadForm"
+            }
+          ],
+          on: { created: _vm.threadCreated }
+        })
       ],
       1
     ),
@@ -48800,7 +48851,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
 
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['options'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["e" /* mapState */])(['options'])),
   components: {
     VPost: __WEBPACK_IMPORTED_MODULE_1__VPost_vue___default.a
   },
@@ -48914,7 +48965,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -48925,8 +48976,11 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VPostFormAnswer_vue__ = __webpack_require__(119);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VPostFormAnswer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__VPostFormAnswer_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue__);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -48963,28 +49017,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'VPost',
+  data: function data() {
+    return {
+      showAnswerForm: false
+    };
+  },
+
   props: {
     post: {
       type: Object,
       required: true
     }
   },
-  methods: {
+  methods: _extends({
     toggleAnswerForm: function toggleAnswerForm() {
-      this.post.show_answer_form = !this.post.show_answer_form;
+      this.showAnswerForm = !this.showAnswerForm;
     },
     postCreated: function postCreated() {
       this.toggleAnswerForm();
       this.$emit('answered');
     }
-  },
+  }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['jump'])),
   components: {
-    VPostFormAnswer: __WEBPACK_IMPORTED_MODULE_0__VPostFormAnswer_vue___default.a
+    VPostFormAnswer: __WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue___default.a
   }
 });
 
@@ -49075,7 +49138,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\nul#errors[data-v-49c5af02] {\n  margin-bottom: 0;\n  list-style-type: none;\n}\na#submit[data-v-49c5af02] {\n  width: 80px;\n}\n", ""]);
+exports.push([module.i, "\nul#errors[data-v-49c5af02] {\n  margin-bottom: 0;\n  list-style-type: none;\n}\n", ""]);
 
 // exports
 
@@ -49132,8 +49195,11 @@ var $ = __webpack_require__(6);
       required: true
     }
   },
-  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])(['options'])),
+  computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["e" /* mapState */])(['options'])),
   methods: {
+    focus: function focus() {
+      $("textarea#post-body").focus(); // TODO: use Vue.js' ref
+    },
     createPost: function createPost() {
       var _this = this;
 
@@ -49141,15 +49207,15 @@ var $ = __webpack_require__(6);
         _this.errors = [];
         _this.newPostBody = '';
         _this.$emit('answered');
-      }).catch(function (response) {
-        _this.errors = Object.values(response.body.errors).flatten();
-      }).finally(function (response) {
-        $("textarea#post-body").focus();
+      }).catch(function (errors) {
+        _this.errors = errors;
       });
+
+      this.focus();
     }
   },
   mounted: function mounted() {
-    $("textarea#post-body").focus();
+    this.focus();
   }
 });
 
@@ -49161,64 +49227,60 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "d-flex card card-body", attrs: { id: "new-post-form" } },
-    [
-      _vm.errors.length
-        ? _c("div", { staticClass: "alert alert-danger" }, [
-            _c(
-              "ul",
-              { attrs: { id: "errors" } },
-              _vm._l(_vm.errors, function(error) {
-                return _c("li", [
-                  _vm._v("\n        " + _vm._s(error) + "\n      ")
-                ])
-              })
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("textarea", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.newPostBody,
-              expression: "newPostBody"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: {
-            rows: "4",
-            placeholder: "Type your message here",
-            id: "post-body",
-            required: ""
-          },
-          domProps: { value: _vm.newPostBody },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.newPostBody = $event.target.value
-            }
+  return _c("div", { staticClass: "card card-body" }, [
+    _vm.errors.length
+      ? _c("div", { staticClass: "alert alert-danger" }, [
+          _c(
+            "ul",
+            { attrs: { id: "errors" } },
+            _vm._l(_vm.errors, function(error) {
+              return _c("li", [
+                _vm._v("\n        " + _vm._s(error) + "\n      ")
+              ])
+            })
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("textarea", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.newPostBody,
+            expression: "newPostBody"
           }
-        })
-      ]),
-      _vm._v(" "),
-      _c(
-        "span",
-        {
-          staticClass: "ml-auto link btn btn-primary",
-          attrs: { id: "submit" },
-          on: { click: _vm.createPost }
+        ],
+        staticClass: "form-control",
+        attrs: {
+          rows: "4",
+          placeholder: "Type your message here",
+          id: "post-body",
+          required: ""
         },
-        [_vm._v("Post")]
-      )
-    ]
-  )
+        domProps: { value: _vm.newPostBody },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.newPostBody = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c(
+      "span",
+      {
+        staticClass: "link btn btn-primary",
+        attrs: { id: "submit" },
+        on: { click: _vm.createPost }
+      },
+      [_vm._v("Post")]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -49248,9 +49310,18 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "d-flex card-footer" }, [
         _c("small", [
-          _c("a", { attrs: { href: "#post" + _vm.post.id } }, [
-            _vm._v("\n        #" + _vm._s(_vm.post.id) + "\n      ")
-          ]),
+          _c(
+            "span",
+            {
+              staticClass: "link",
+              on: {
+                click: function($event) {
+                  _vm.jump("post" + _vm.post.id)
+                }
+              }
+            },
+            [_vm._v("\n        #" + _vm._s(_vm.post.id) + "\n      ")]
+          ),
           _vm._v(" "),
           _vm.post.answers_to_post
             ? _c("span", [
@@ -49275,12 +49346,18 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm.post.show_answer_form
-        ? _c("app-thread-post-answer-form", {
-            attrs: { answers_to_post: _vm.post },
-            on: { answered: _vm.postCreated }
-          })
-        : _vm._e()
+      _c("v-post-form-answer", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.showAnswerForm,
+            expression: "showAnswerForm"
+          }
+        ],
+        attrs: { answers_to_post: _vm.post },
+        on: { answered: _vm.postCreated }
+      })
     ],
     1
   )

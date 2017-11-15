@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-body" id="new-thread-form">
+  <div class="card card-body">
     <div v-if="errors.length" class="alert alert-danger">
       <ul id="errors">
         <li v-for="error in errors">
@@ -47,34 +47,34 @@ export default {
   },
   computed: {
     ...mapState([
-      'section'
+      'options'
     ])
   },
   methods: {
+    focus () {
+      $("input#thread-name").focus() // TODO: use Vue.js' ref
+    },
+
     createThread () {
-      Vue.requestCreateNewThread(this.section.id, this.newThreadName, this.firstPostBody).then(response => {
+      Vue.requestCreateNewThread(this.options.section.id, this.newThreadName, this.firstPostBody).then(response => {
         this.errors = []
         this.newThreadName = ''
         this.firstPostBody = ''
         this.$emit('created')
-      }).catch(response => {
-        this.errors = Object.values(response.body.errors).flatten()
-      }).finally(response => {
-        $("input#thread-name").focus()
+      }).catch(errors => {
+        this.errors = errors
       })
+
+      this.focus()
     }
   },
   mounted () {
-    $("input#thread-name").focus()
+    this.focus()
   }
 }
 </script>
 
 <style scoped>
-#new-thread-form {
-  width: 40%;
-}
-
 ul#errors {
   margin-bottom: 0;
   list-style-type: none;

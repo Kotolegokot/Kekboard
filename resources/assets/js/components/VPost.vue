@@ -5,9 +5,11 @@
     </div>
     <div class="d-flex card-footer">
       <small>
-        <a :href="'#post' + post.id">
+        <span
+          class="link"
+          @click="jump('post' + post.id)">
           #{{ post.id }}
-        </a>
+        </span>
 
         <span v-if="post.answers_to_post">
           -----&gt; <a :href="'#post' + post.answers_to_post.id">#{{ post.answers_to_post.id }}</a>
@@ -26,8 +28,8 @@
       </div>
     </div>
 
-    <app-thread-post-answer-form
-      v-if="post.show_answer_form"
+    <v-post-form-answer
+      v-show="showAnswerForm"
       :answers_to_post="post"
       @answered="postCreated"
       />
@@ -35,10 +37,16 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import VPostFormAnswer from './VPostFormAnswer.vue'
 
 export default {
   name: 'VPost',
+  data () {
+    return {
+      showAnswerForm: false
+    }
+  },
   props: {
     post: {
       type: Object,
@@ -47,12 +55,17 @@ export default {
   },
   methods: {
     toggleAnswerForm () {
-      this.post.show_answer_form = !this.post.show_answer_form
+      this.showAnswerForm = !this.showAnswerForm
     },
+
     postCreated () {
       this.toggleAnswerForm()
       this.$emit('answered')
-    }
+    },
+
+    ...mapActions([
+      'jump'
+    ])
   },
   components: {
     VPostFormAnswer

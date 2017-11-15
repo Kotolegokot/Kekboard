@@ -24,7 +24,7 @@ export default {
     ])
   },
   mounted () {
-    Vue.requestSections().then(response => { this.sections = response.body })
+    Vue.requestSections().then(sections => { this.sections = sections })
   }
 }
 </script>
