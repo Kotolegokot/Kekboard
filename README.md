@@ -4,14 +4,11 @@ A stupid imageboard made with Laravel and Vue.js
 
 === Bugs ===
 
-* Fix collapsing forms' width on narrow screens
-
 === Suggestions ===
 
 * Adequate design
 * Uploading images
 * Registration
 * Something amazing
-* History
-* Back button
+* History (routing left)
 * Move sections from store.state to AppMain.data

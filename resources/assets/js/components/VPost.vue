@@ -12,7 +12,12 @@
         </span>
 
         <span v-if="post.answers_to_post">
-          -----&gt; <a :href="'#post' + post.answers_to_post.id">#{{ post.answers_to_post.id }}</a>
+          ---&gt;
+          <span
+            class="link"
+            @click="jump('post' + post.answers_to_post.id)">
+            #{{ post.answers_to_post.id }}
+          </span>
         </span>
       </small>
 

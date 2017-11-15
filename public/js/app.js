@@ -23199,9 +23199,7 @@ $(function () {
       page: 'main',
       pageTitle: '',
       pageUrl: '',
-      options: {},
-
-      sections: []
+      options: {}
     },
     mutations: {
       go: function go(state, _ref) {
@@ -48965,7 +48963,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -48981,6 +48979,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -49325,11 +49328,24 @@ var render = function() {
           _vm._v(" "),
           _vm.post.answers_to_post
             ? _c("span", [
-                _vm._v("\n        -----> "),
+                _vm._v("\n        --->\n        "),
                 _c(
-                  "a",
-                  { attrs: { href: "#post" + _vm.post.answers_to_post.id } },
-                  [_vm._v("#" + _vm._s(_vm.post.answers_to_post.id))]
+                  "span",
+                  {
+                    staticClass: "link",
+                    on: {
+                      click: function($event) {
+                        _vm.jump("post" + _vm.post.answers_to_post.id)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n          #" +
+                        _vm._s(_vm.post.answers_to_post.id) +
+                        "\n        "
+                    )
+                  ]
                 )
               ])
             : _vm._e()

@@ -21,9 +21,7 @@ $(() => {
       page: 'main',
       pageTitle: '',
       pageUrl: '',
-      options: {},
-
-      sections: []
+      options: {}
     },
     mutations: {
       go (state, { page, pushState = true, ...options }) {
