@@ -1,6 +1,6 @@
 <template>
   <div class="thread" :id="'thread' + options.thread.id">
-    <app-thread-post
+    <v-post
       class="post"
       v-for="post in posts"
       :key="post.id"

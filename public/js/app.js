@@ -47246,7 +47246,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n#sidebar[data-v-1ab56f51] {\n  position: absolute;\n  left: 0;\n  top: 0;\n  bottom: 0;\n  width: 300px;\n  max-width: 90%;\n  -webkit-transition-property: left;\n  transition-property: left;\n  -webkit-transition-duration: 0.2s;\n          transition-duration: 0.2s;\n  -webkit-transition-timing-function: linear;\n          transition-timing-function: linear;\n  border-right: 1px solid rgba(0, 0, 0, 0.07);\n}\n#sidebar.hidden[data-v-1ab56f51] {\n  left: -300px;\n}\n#header[data-v-1ab56f51] {\n  height: 34px;\n  margin-bottom: 16px;\n}\n#content[data-v-1ab56f51] {\n  position: absolute;\n  left: 300px;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  -webkit-transition-property: left;\n  transition-property: left;\n  -webkit-transition-duration: 0.2s;\n          transition-duration: 0.2s;\n  -webkit-transition-timing-function: linear;\n          transition-timing-function: linear;\n}\n#content.expanded[data-v-1ab56f51] {\n  left: 0;\n}\n#component[data-v-1ab56f51] {\n  max-width: 800px;\n  margin: 0 auto;\n}\n", ""]);
+exports.push([module.i, "\n#sidebar[data-v-1ab56f51] {\n  position: fixed;\n  left: 0;\n  top: 0;\n  bottom: 0;\n  width: 300px;\n  max-width: 90%;\n  -webkit-transition-property: left;\n  transition-property: left;\n  -webkit-transition-duration: 0.2s;\n          transition-duration: 0.2s;\n  -webkit-transition-timing-function: linear;\n          transition-timing-function: linear;\n  border-right: 1px solid rgba(0, 0, 0, 0.07);\n}\n#sidebar.hidden[data-v-1ab56f51] {\n  left: -300px;\n}\n#header[data-v-1ab56f51] {\n  height: 34px;\n  margin-bottom: 16px;\n}\n#content[data-v-1ab56f51] {\n  position: absolute;\n  left: 300px;\n  right: 0;\n  top: 0;\n  bottom: 0;\n  -webkit-transition-property: left;\n  transition-property: left;\n  -webkit-transition-duration: 0.2s;\n          transition-duration: 0.2s;\n  -webkit-transition-timing-function: linear;\n          transition-timing-function: linear;\n}\n#content.expanded[data-v-1ab56f51] {\n  left: 0;\n}\n#component[data-v-1ab56f51] {\n  max-width: 800px;\n  margin: 0 auto;\n}\n", ""]);
 
 // exports
 
@@ -49295,7 +49295,7 @@ var render = function() {
     "div",
     { staticClass: "thread", attrs: { id: "thread" + _vm.options.thread.id } },
     _vm._l(_vm.posts, function(post) {
-      return _c("app-thread-post", {
+      return _c("v-post", {
         key: post.id,
         staticClass: "post",
         attrs: { post: post },
