@@ -31,11 +31,11 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import AppSectionNewThreadForm from './AppSectionNewThreadForm.vue'
+import TheSectionFormNewThread from './TheSectionFormNewThread.vue'
 import Vue from 'vue'
 
 export default {
-  name: 'AppSection',
+  name: 'TheSection',
   data () {
     return {
       threads: [],
@@ -49,7 +49,7 @@ export default {
     ])
   },
   components: {
-    AppSectionNewThreadForm
+    TheSectionFormNewThread
   },
   methods: {
     ...mapMutations([

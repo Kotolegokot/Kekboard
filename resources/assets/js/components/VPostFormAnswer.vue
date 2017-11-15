@@ -22,10 +22,10 @@
 <script>
 import { mapState } from 'vuex'
 import Vue from 'vue'
-window.$ = require('jquery')
+const $ = require('jquery')
 
 export default {
-  name: 'AppThreadPostAnswerForm',
+  name: 'VPostFormAnswer',
   data () {
     return {
       newPostBody: '',

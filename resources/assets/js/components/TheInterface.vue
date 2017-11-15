@@ -1,13 +1,13 @@
 <template>
   <div>
-    <app-sidebar
+    <the-sidebar
       :class="{ hidden: !sidebarShown }"
       id="sidebar" />
 
     <div
       :class="{ expanded: !sidebarShown }"
       id="content">
-      <app-header
+      <the-header
         id="header"
         @sidebarToggled="toggleSidebar" />
 
@@ -20,11 +20,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AppHeader from './AppHeader.vue'
-import AppSidebar from './AppSidebar.vue'
+import TheHeader from './TheHeader.vue'
+import TheSidebar from './TheSidebar.vue'
 
 export default {
-  name: 'AppInterface',
+  name: 'TheInterface',
   data () {
     return {
       sidebarShown: true
@@ -41,8 +41,8 @@ export default {
     }
   },
   components: {
-    AppHeader,
-    AppSidebar
+    TheHeader,
+    TheSidebar
   }
 }
 </script>

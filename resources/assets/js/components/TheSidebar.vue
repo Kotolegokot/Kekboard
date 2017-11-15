@@ -24,7 +24,7 @@ import Vue from 'vue'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'AppSidebar',
+  name: 'TheSidebar',
   data () {
     return {
       sections: []

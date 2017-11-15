@@ -9,10 +9,10 @@
 </template>
 
 <script>
-window.octicons = require('octicons')
+const octicons = require('octicons')
 
 export default {
-  name: 'AppHeader',
+  name: 'TheHeader',
   data () {
     return {
       iconHtml: octicons['grabber'].toSVG({ width: '16px' })

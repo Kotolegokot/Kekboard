@@ -14,7 +14,7 @@
 
     <body>
         <div id="app">
-          <app-interface />
+          <the-interface />
         </div>
 
         <!-- JS -->

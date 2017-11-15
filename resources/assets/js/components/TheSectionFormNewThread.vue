@@ -37,7 +37,7 @@ import Vue from 'vue'
 window.$ = require('jquery')
 
 export default {
-  name: 'AppNewThreadForm',
+  name: 'TheSectionFormNewThread',
   data () {
     return {
       newThreadName: '',

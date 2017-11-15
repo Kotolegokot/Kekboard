@@ -12,11 +12,11 @@
 
 <script>
 import { mapState } from 'vuex'
-import AppThreadPost from './AppThreadPost.vue'
+import VPost from './VPost.vue'
 import Vue from 'vue'
 
 export default {
-  name: 'AppThread',
+  name: 'TheThread',
   data () {
     return {
       posts: [],
@@ -29,7 +29,7 @@ export default {
     ])
   },
   components: {
-    AppThreadPost
+    VPost
   },
   methods: {
     toggleNewPostForm () {

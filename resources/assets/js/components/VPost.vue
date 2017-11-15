@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import AppThreadPostAnswerForm from './AppThreadPostAnswerForm'
+import VPostFormAnswer from './VPostFormAnswer.vue'
 
 export default {
-  name: 'AppThreadPost',
+  name: 'VPost',
   props: {
     post: {
       type: Object,
@@ -55,7 +55,7 @@ export default {
     }
   },
   components: {
-    AppThreadPostAnswerForm
+    VPostFormAnswer
   }
 }
 </script>

@@ -1,6 +1,6 @@
-import AppMain from '../components/AppMain.vue'
-import AppSection from '../components/AppSection.vue'
-import AppThread from '../components/AppThread.vue'
+import TheMain from '../components/TheMain.vue'
+import TheSection from '../components/TheSection.vue'
+import TheThread from '../components/TheThread.vue'
 //import AppSettings from '../components/AppSettings.vue'
 
 export default {
@@ -9,17 +9,17 @@ export default {
       main: {
         title: '',
         url: '/',
-        component: AppMain
+        component: TheMain
       },
       section: {
         title: 'Section',
         url: options => '/section/' + options.section.id,
-        component: AppSection
+        component: TheSection
       },
       thread: {
         title: 'Thread',
         url: options => '/thread/' + options.thread.id,
-        component: AppThread
+        component: TheThread
       },
       settings: {
         title: 'Settings',

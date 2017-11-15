@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
-import AppInterface from './components/AppInterface.vue'
-import AppHeader from './components/AppHeader.vue'
-import AppSidebar from './components/AppSidebar.vue'
+import TheInterface from './components/TheInterface.vue'
+import TheHeader from './components/TheHeader.vue'
+import TheSidebar from './components/TheSidebar.vue'
 import bootstrap from './bootstrap'
 
 import KekboardAPI from './plugins/KekboardAPI.js'
@@ -51,7 +51,7 @@ $(() => {
   let vue = new Vue({
     el: "#app",
     components: {
-      AppInterface
+      TheInterface
     },
     store,
     computed: Vuex.mapGetters([
