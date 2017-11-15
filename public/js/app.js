@@ -46997,6 +46997,8 @@ window.$ = __webpack_require__(6);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   install: function install(Vue) {
+    var _this = this;
+
     Vue.requestCurrentUser = function () {
       return Vue.http.get('/user');
     };
@@ -47029,7 +47031,34 @@ window.$ = __webpack_require__(6);
     };
 
     Vue.requestPosts = function (threadId) {
-      return Vue.http.get('/thread/' + threadId + '/posts');
+      return new Promise(function (resolve, reject) {
+        Vue.http.get('/thread/' + threadId + '/posts').then(function (response) {
+          var posts = response.body;
+
+          var _loop = function _loop(i) {
+            posts[i].answers_to_post = {};
+            if (posts[i].answers_to_post_id != 0) {
+              Vue.requestPost(posts[i].answers_to_post_id).then(function (response) {
+                posts[i].answers_to_post = response.body;
+              });
+            }
+
+            posts[i].show_answer_form = false;
+
+            posts[i].isMain = function () {
+              return _this.answers_to_post === {};
+            }.bind(posts[i]);
+          };
+
+          for (var i = 0; i < posts.length; i++) {
+            _loop(i);
+          }
+
+          return resolve(posts);
+        }).catch(function (response) {
+          reject(response.statusText);
+        });
+      });
     };
 
     Vue.requestCreateNewPost = function (threadId, body, answersToPostId) {
@@ -48782,24 +48811,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     updatePosts: function updatePosts() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestPosts(this.options.thread.id).then(function (response) {
-        var posts = response.body;
-
-        var _loop = function _loop(i) {
-          posts[i].answers_to_post = {};
-          if (posts[i].answers_to_post_id != 0) {
-            __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestPost(posts[i].answers_to_post_id).then(function (response) {
-              posts[i].answers_to_post = response.body;
-            });
-          }
-
-          posts[i].show_answer_form = false;
-        };
-
-        for (var i = 0; i < posts.length; i++) {
-          _loop(i);
-        }
-
+      __WEBPACK_IMPORTED_MODULE_2_vue___default.a.requestPosts(this.options.thread.id).then(function (posts) {
         _this.posts = posts;
       });
     },

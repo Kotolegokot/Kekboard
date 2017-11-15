@@ -36,22 +36,7 @@ export default {
       this.showNewPostForm = !this.showNewPostForm
     },
     updatePosts () {
-      Vue.requestPosts(this.options.thread.id).then(response => {
-        let posts = response.body
-
-        for (let i = 0; i < posts.length; i++) {
-          posts[i].answers_to_post = {}
-          if(posts[i].answers_to_post_id != 0) {
-            Vue.requestPost(posts[i].answers_to_post_id).then(response => {
-              posts[i].answers_to_post = response.body
-            })
-          }
-
-          posts[i].show_answer_form = false
-        }
-
-        this.posts = posts
-      })
+      Vue.requestPosts(this.options.thread.id).then(posts => { this.posts = posts })
     },
     postCreated () {
       this.updatePosts()
