@@ -5,6 +5,7 @@
       v-for="post in posts"
       :key="post.id"
       :post="post"
+      :id="'post' + post.id"
       @answered="postCreated"
       />
   </div>

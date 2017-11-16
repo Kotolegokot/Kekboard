@@ -46999,8 +46999,6 @@ window.$ = __webpack_require__(6);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   install: function install(Vue) {
-    var _this = this;
-
     Vue.requestCurrentUser = function () {
       return new Promise(function (resolve, reject) {
         Vue.http.get('/user').then(function (response) {
@@ -47023,22 +47021,22 @@ window.$ = __webpack_require__(6);
       });
     };
 
-    Vue.requestPost = function (postId) {
+    Vue.requestSections = function () {
       return new Promise(function (resolve, reject) {
-        Vue.http.get('/post/' + postId).then(function (response) {
-          var post = response.body;
-          resolve(post);
+        Vue.http.get('/sections').then(function (response) {
+          var sections = response.body;
+          resolve(sections);
         }).catch(function (response) {
           reject(response);
         });
       });
     };
 
-    Vue.requestSections = function () {
+    Vue.requestThread = function (threadId) {
       return new Promise(function (resolve, reject) {
-        Vue.http.get('/sections').then(function (response) {
-          var sections = response.body;
-          resolve(sections);
+        Vue.http.get('/thread/' + threadId).then(function (response) {
+          var thread = response.body;
+          resolve(thread);
         }).catch(function (response) {
           reject(response);
         });
@@ -47086,18 +47084,29 @@ window.$ = __webpack_require__(6);
           posts.map(function (post) {
             Vue.set(post, 'answers_to_post', null);
 
-            if (post.answers_to_post_id !== 0) {
+            Vue.set(post, 'isMain', function () {
+              return post.answers_to_post_id == 0;
+            });
+
+            if (!post.isMain()) {
               Vue.requestPost(post.answers_to_post_id).then(function (answers_to_post) {
                 Vue.set(post, 'answers_to_post', answers_to_post);
               });
             }
-
-            Vue.set(post, 'isMain', function () {
-              return _this.answers_to_post === 0;
-            }.bind(post));
           });
 
           resolve(posts);
+        }).catch(function (response) {
+          reject(response);
+        });
+      });
+    };
+
+    Vue.requestPost = function (postId) {
+      return new Promise(function (resolve, reject) {
+        Vue.http.get('/post/' + postId).then(function (response) {
+          var post = response.body;
+          resolve(post);
         }).catch(function (response) {
           reject(response);
         });
@@ -48835,6 +48844,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
 
 
 
@@ -48963,7 +48973,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.card[data-v-34f6a1fd] {\n  border-radius: 0;\n}\n.card-footer[data-v-34f6a1fd] {\n  padding-top: 0;\n  padding-bottom: 2px;\n}\n", ""]);
 
 // exports
 
@@ -48974,9 +48984,11 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue__ = __webpack_require__(119);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__VPostFormAnswer_vue__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__VPostFormAnswer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__VPostFormAnswer_vue__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -49022,6 +49034,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+
 
 
 
@@ -49030,7 +49044,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   name: 'VPost',
   data: function data() {
     return {
-      showAnswerForm: false
+      showAnswerForm: false,
+      threadName: ''
     };
   },
 
@@ -49048,9 +49063,18 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       this.toggleAnswerForm();
       this.$emit('answered');
     }
-  }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['jump'])),
+  }, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapActions */])(['jump'])),
   components: {
-    VPostFormAnswer: __WEBPACK_IMPORTED_MODULE_1__VPostFormAnswer_vue___default.a
+    VPostFormAnswer: __WEBPACK_IMPORTED_MODULE_2__VPostFormAnswer_vue___default.a
+  },
+  created: function created() {
+    var _this = this;
+
+    if (this.post.isMain()) {
+      __WEBPACK_IMPORTED_MODULE_0_vue___default.a.requestThread(this.post.thread_id).then(function (thread) {
+        _this.threadName = thread.name;
+      });
+    }
   }
 });
 
@@ -49305,14 +49329,20 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "card", attrs: { id: "post" + _vm.post.id } },
+    { staticClass: "card" },
     [
+      _vm.post.isMain()
+        ? _c("div", { staticClass: "card-header" }, [
+            _vm._v("\n    " + _vm._s(_vm.threadName) + "\n  ")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
         _vm._v("\n    " + _vm._s(_vm.post.body) + "\n  ")
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "d-flex card-footer" }, [
-        _c("small", [
+      _c("div", { staticClass: "d-flex align-items-center card-footer" }, [
+        _c("div", { staticClass: "post-id" }, [
           _c(
             "span",
             {
@@ -49323,7 +49353,7 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("\n        #" + _vm._s(_vm.post.id) + "\n      ")]
+            [_c("small", [_vm._v("#" + _vm._s(_vm.post.id))])]
           ),
           _vm._v(" "),
           _vm.post.answers_to_post
@@ -49340,25 +49370,21 @@ var render = function() {
                     }
                   },
                   [
-                    _vm._v(
-                      "\n          #" +
-                        _vm._s(_vm.post.answers_to_post.id) +
-                        "\n        "
-                    )
+                    _c("small", [
+                      _vm._v("#" + _vm._s(_vm.post.answers_to_post.id))
+                    ])
                   ]
                 )
               ])
             : _vm._e()
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "ml-auto" }, [
-          _c("small", [
-            _c(
-              "span",
-              { staticClass: "link", on: { click: _vm.toggleAnswerForm } },
-              [_vm._v("\n          answer\n        ")]
-            )
-          ])
+        _c("div", { staticClass: "btn-answer ml-auto" }, [
+          _c(
+            "span",
+            { staticClass: "link", on: { click: _vm.toggleAnswerForm } },
+            [_c("small", [_vm._v("answer")])]
+          )
         ])
       ]),
       _vm._v(" "),
@@ -49403,7 +49429,7 @@ var render = function() {
       return _c("v-post", {
         key: post.id,
         staticClass: "post",
-        attrs: { post: post },
+        attrs: { post: post, id: "post" + post.id },
         on: { answered: _vm.postCreated }
       })
     })

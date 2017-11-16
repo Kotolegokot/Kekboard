@@ -77,12 +77,16 @@ Route::post('/section/{section}/threads/create', function (Request $request, App
   return [ 'status' => 200 ];
 });
 
+Route::get('/thread/{thread}', function (Request $request, App\Thread $thread) {
+    return Auth::check() ? $thread : abort(406);
+});
+
 Route::get('/thread/{thread}/posts', function (Request $request, App\Thread $thread) {
   if (Auth::guest()) {
     return abort(406);
   }
 
-  $posts_ = $thread->posts->sortByDesc(function ($post) {
+  $posts_ = $thread->posts->sortBy(function ($post) {
     return new DateTime($post->created_at);
   });
 

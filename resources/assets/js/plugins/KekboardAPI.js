@@ -16,17 +16,17 @@ export default {
       }).catch(response => { reject(response) })
     })
 
-    Vue.requestPost = postId => new Promise((resolve, reject) => {
-      Vue.http.get('/post/' + postId).then(response => {
-        let post = response.body
-        resolve(post)
-      }).catch(response => { reject(response) })
-    })
-
     Vue.requestSections = () => new Promise((resolve, reject) => {
       Vue.http.get('/sections').then(response => {
         let sections = response.body
         resolve(sections)
+      }).catch(response => { reject(response) })
+    })
+
+    Vue.requestThread = threadId => new Promise((resolve, reject) => {
+      Vue.http.get(`/thread/${threadId}`).then(response => {
+        let thread = response.body
+        resolve(thread)
       }).catch(response => { reject(response) })
     })
 
@@ -62,16 +62,24 @@ export default {
         posts.map(post => {
           Vue.set(post, 'answers_to_post', null)
 
-          if (post.answers_to_post_id !== 0) {
+          Vue.set(post, 'isMain', () => post.answers_to_post_id == 0)
+
+          if (!post.isMain()) {
             Vue.requestPost(post.answers_to_post_id).then(answers_to_post => {
               Vue.set(post, 'answers_to_post', answers_to_post)
             })
           }
 
-          Vue.set(post, 'isMain', (() => this.answers_to_post === 0).bind(post))
         })
 
         resolve(posts)
+      }).catch(response => { reject(response) })
+    })
+
+    Vue.requestPost = postId => new Promise((resolve, reject) => {
+      Vue.http.get('/post/' + postId).then(response => {
+        let post = response.body
+        resolve(post)
       }).catch(response => { reject(response) })
     })
 
